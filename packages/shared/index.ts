@@ -1,0 +1,1 @@
+export const testMessage = "Hello from @propalytiq/shared!";
