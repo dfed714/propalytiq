@@ -1,0 +1,52 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id           String        @id @default(cuid())
+    email        String        @unique
+    first_name   String
+    last_name    String
+    subscription Subscription?
+    properties   Property[]
+    files        File[]
+}
+
+model Subscription {
+    id       String @id @default(cuid())
+    userId   String @unique
+    stripeId String
+    status   String
+    plan     String
+    user     User   @relation(fields: [userId], references: [id])
+}
+
+model Property {
+    id      String   @id @default(cuid())
+    userId  String
+    address String
+    details Json
+    reports Report[]
+    user    User     @relation(fields: [userId], references: [id])
+}
+
+model Report {
+    id         String   @id @default(cuid())
+    propertyId String
+    analysis   Json
+    pdfUrl     String?
+    property   Property @relation(fields: [propertyId], references: [id])
+}
+
+model File {
+    id     String @id @default(cuid())
+    url    String
+    type   String
+    userId String
+    user   User   @relation(fields: [userId], references: [id])
+}
