@@ -8,6 +8,7 @@ async function main() {
       first_name: 'Daniel',
       last_name: 'Feddy',
       email: 'daniel.feddy0123@gmail.com',
+      clerkUserId: 'user_318PLdUg1J9v5Aa0EbOtWxIeWTG',
     },
   });
 }

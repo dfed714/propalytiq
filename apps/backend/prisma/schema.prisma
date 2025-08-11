@@ -13,6 +13,7 @@ model User {
     first_name   String
     last_name    String
     subscription Subscription?
+    clerkUserId  String        @unique
     properties   Property[]
     files        File[]
 }

@@ -4,6 +4,7 @@ CREATE TABLE "public"."User" (
     "email" TEXT NOT NULL,
     "first_name" TEXT NOT NULL,
     "last_name" TEXT NOT NULL,
+    "clerkUserId" TEXT NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -51,6 +52,9 @@ CREATE TABLE "public"."File" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "public"."User"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_clerkUserId_key" ON "public"."User"("clerkUserId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Subscription_userId_key" ON "public"."Subscription"("userId");
