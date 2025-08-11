@@ -1,17 +1,10 @@
-import { auth } from '@clerk/nextjs/server';
-import { redirect } from 'next/navigation';
+import Header from "./components/header";
 
 export default async function HomePage() {
-  const { userId } = await auth();
-
-  if (!userId) {
-    redirect('/sign-in');
-  }
-
   return (
     <div>
-      <h1>Welcome back!</h1>
-      <p>Your user ID is: {userId}</p>
+      <Header></Header>
+      <h1>Home Page</h1>
     </div>
   );
 }
