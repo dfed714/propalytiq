@@ -15,7 +15,7 @@ interface ClerkUserCreatedEvent {
 }
 
 @Controller('webhooks')
-export class WebhookController {
+export class ClerkController {
   @Post('clerk')
   @HttpCode(200)
   async handleClerkWebhook(

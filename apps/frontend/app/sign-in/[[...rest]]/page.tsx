@@ -9,8 +9,7 @@ export default function SignInPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Use fallbackRedirectUrl or forceRedirectUrl now instead of redirectUrl
-  const fallbackRedirectUrl = searchParams.get('redirectUrl') || '/dashboard';
+  const fallbackRedirectUrl = searchParams.get('fallbackRedirectUrl') || '/dashboard';
 
   useEffect(() => {
     if (isLoaded && isSignedIn) {
