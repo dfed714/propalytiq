@@ -1,10 +1,20 @@
-import Header from "./components/header";
+import React from 'react';
+import MainLayout from '@components/Layout/MainLayout';
+import HeroSection from '@components/Home/HeroSection';
+import ProcessSection from '@components/Home/ProcessSection';
+import TestimonialSection from '@components/Home/TestimonialSection';
+import CTASection from '@components/Home/CTASection';
+import './globals.css';
 
-export default async function HomePage() {
+const Index = () => {
   return (
-    <div>
-      <Header></Header>
-      <h1>Home Page</h1>
-    </div>
+    <MainLayout>
+      <HeroSection />
+      <ProcessSection />
+      <TestimonialSection />
+      <CTASection />
+    </MainLayout>
   );
-}
+};
+
+export default Index;

@@ -1,20 +1,14 @@
-import { auth } from '@clerk/nextjs/server';
+import React from 'react';
 import { redirect } from 'next/navigation';
-import Header from '../components/header';
+import { auth } from '@clerk/nextjs/server';
+import DashboardClient from './DashboardClient'; // client component
 
-export default async function Dashboard() {
+export default async function DashboardPage() {
   const { userId } = await auth();
 
   if (!userId) {
     redirect('/sign-in?fallbackRedirectUrl=/dashboard');
   }
 
-  return (
-    <div>
-      <Header></Header>
-      <h1>Dashboard</h1>
-      <h2>Welcome back!</h2>
-      <p>Your user ID is: {userId}</p>
-    </div>
-  );
+  return <DashboardClient />;
 }

@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { SignIn, useUser } from '@clerk/nextjs';
+import MainLayout from '@components/Layout/MainLayout';
 
 export default function SignInPage() {
   const { isSignedIn, isLoaded } = useUser();
@@ -17,5 +18,13 @@ export default function SignInPage() {
     }
   }, [isLoaded, isSignedIn, fallbackRedirectUrl, router]);
 
-  return <SignIn path="/sign-in" routing="path" fallbackRedirectUrl={fallbackRedirectUrl} />;
+  return (
+    <MainLayout>
+      <div className="container py-16">
+        <div className="max-w-md mx-auto">
+            <SignIn path="/sign-in" routing="path" fallbackRedirectUrl={fallbackRedirectUrl} />
+        </div>
+      </div>
+    </MainLayout>
+  );
 }

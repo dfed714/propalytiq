@@ -1,6 +1,14 @@
 {
   "extends": "@repo/typescript-config/nextjs.json",
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@components/*": ["app/components/*"],
+      "@ui/*": ["app/components/ui/*"],
+      "@lib/*": ["app/lib/*"],
+      "@utils/*": ["app/utils/*"],
+      "@hooks/*": ["app/hooks/*"],
+    },
     "plugins": [
       {
         "name": "next"
@@ -12,9 +20,8 @@
     "**/*.tsx",
     "next-env.d.ts",
     "next.config.js",
-    ".next/types/**/*.ts"
-, "../middleware.ts"  ],
-  "exclude": [
-    "node_modules"
-  ]
+    ".next/types/**/*.ts",
+    "../middleware.ts"
+  ],
+  "exclude": ["node_modules"]
 }
