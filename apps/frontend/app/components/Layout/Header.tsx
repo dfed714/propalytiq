@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Button } from "@components/ui/button";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -59,24 +59,27 @@ const Header = () => {
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center space-x-4">
             <SignedOut>
-              <SignInButton mode="modal">
+              <Link href="/sign-in">
                 <Button variant="outline" asChild>
-                  <button>Login</button>
+                  <button className="p-2">Login</button>
                 </Button>
-              </SignInButton>
+              </Link>
             </SignedOut>
             <Button asChild className="purple-gradient-bg">
               <Link href="/analysis">Start Analysis</Link>
             </Button>
             <SignedIn>
               <UserButton
+                showName={true}
+                userProfileMode="navigation"
+                userProfileUrl="/settings"
                 appearance={{
                   elements: {
                     userButtonAvatarBox: "h-10 w-10",
                     userButtonPopoverCard: "p-2",
                   },
                 }}
-              />
+              ></UserButton>
             </SignedIn>
           </div>
 
@@ -84,11 +87,11 @@ const Header = () => {
           <div className="flex items-center">
             <SignedOut>
               <div className="md:hidden">
-                <SignInButton mode="modal">
+                <Link href="/sign-in">
                   <Button variant="outline" asChild>
                     <button className="p-2">Login</button>
                   </Button>
-                </SignInButton>
+                </Link>
               </div>
             </SignedOut>
             <SignedIn>

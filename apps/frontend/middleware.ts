@@ -1,38 +1,18 @@
-import { clerkMiddleware, getAuth } from '@clerk/nextjs/server';
-import { NextResponse, type NextRequest, type NextFetchEvent } from 'next/server';
+import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 
-const publicPaths = ['/', '/sign-in', '/sign-up', '/api/webhooks/clerk'];
+const isPublicRoute = createRouteMatcher(['/', '/sign-in(.*)', '/sign-up(.*)', '/home(.*)', '/about(.*)', '/pricing(.*)', '/contact(.*)', '/how-it-works(.*)', '/privacy-policy(.*)', '/terms-of-service(.*)', '/legal-disclaimer(.*)'])
 
-export async function middleware(req: NextRequest, event: NextFetchEvent) {
-  // Run Clerk middleware first, get its response if any
-  const clerkResponse = await clerkMiddleware(req, event);
-
-  if (clerkResponse) {
-    // Clerk middleware wants to return a response (e.g. redirect or other)
-    return clerkResponse;
+export default clerkMiddleware(async (auth, req) => {
+  if (!isPublicRoute(req)) {
+    await auth.protect()
   }
-
-  const { pathname } = req.nextUrl;
-  const isPublicPath = publicPaths.some(path => pathname.startsWith(path));
-
-  if (isPublicPath) {
-    return NextResponse.next();
-  }
-
-  const auth = getAuth(req);
-
-  if (!auth.userId) {
-    const signInUrl = new URL('/sign-in', req.url);
-    signInUrl.searchParams.set('fallbackRedirectUrl', pathname);
-    return NextResponse.redirect(signInUrl);
-  }
-
-  return NextResponse.next();
-}
+})
 
 export const config = {
   matcher: [
-    '/((?!_next|.*\\..*).*)',
-    '/api/(.*)',
+    // Skip Next.js internals and all static files, unless found in search params
+    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
+    // Always run for API routes
+    '/(api|trpc)(.*)',
   ],
-};
+}

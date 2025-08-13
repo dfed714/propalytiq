@@ -14,7 +14,7 @@ const PricingPage = () => {
   // Pricing calculation based on billing cycle
   const getPrice = (monthly: number) => {
     if (billingAnnual) {
-      const annualPrice = monthly * 10; // 2 months free
+      const annualPrice = monthly * 10;
       return `£${annualPrice.toFixed(2)}`;
     }
     return `£${monthly.toFixed(2)}`;
