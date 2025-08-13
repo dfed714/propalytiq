@@ -21,6 +21,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@clerk/backend": "^2.7.1",
     "@clerk/express": "^1.7.17",
     "@nestjs/common": "^11.1.5",
     "@nestjs/core": "^11.1.5",

@@ -21,8 +21,6 @@ export class StripeService {
     });
   };
 
-  // In your StripeService
-
   async updateSubscription(subscriptionId: string, priceId: string) {
     // Update subscription item(s) with new price
     const subscription =
@@ -51,6 +49,16 @@ export class StripeService {
     return await this.stripe.subscriptions.update(subscriptionId, {
       cancel_at_period_end: cancelAtPeriodEnd,
     });
+  }
+
+  async getSubscription(subscriptionId: string) {
+    return await this.stripe.subscriptions.retrieve(subscriptionId, {
+      expand: ['items.data.plan.product'],
+    });
+  }
+
+  async getProduct(productId: string) {
+    return await this.stripe.products.retrieve(productId);
   }
 
   constructEvent(req: Request): Stripe.Event {

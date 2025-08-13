@@ -1,16 +1,15 @@
-import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Req, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ClerkAuthGuard } from '../auth/clerk-auth.guard';
 
-@Controller('users')
 @UseGuards(ClerkAuthGuard)
+@Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly users: UserService) {}
 
-  // GET /users/:id
-  @Get(':id')
-  async getUserName(@Param('id') id: string) {
-    // Pass the string id to the service method
-    return this.userService.getUserName(id);
+  @Get('me')
+  async me(@Req() req: any) {
+    const clerkId = req.user.sub as string;
+    return this.users.getUserByClerkId(clerkId);
   }
 }
