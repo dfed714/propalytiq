@@ -2,9 +2,7 @@
 import DashboardClient from "./DashboardClient";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-
-const API = process.env.API_URL ?? "http://localhost:4000";
-const PREFIX = process.env.API_PREFIX ?? ""; // "/api" if you set a global prefix in Nest
+import { apiFetch } from "@lib/api";
 
 export default async function DashboardPage() {
   // In your Clerk version, auth() returns a Promise — so await it:
@@ -14,12 +12,7 @@ export default async function DashboardPage() {
   // Mint a short-lived backend JWT (audience must match your Clerk template)
   const token = await getToken({ template: "backend" });
 
-  console.log(token);
-
-  const dashboardRes = await fetch(`${API}${PREFIX}/dashboard`, {
-    headers: token ? { Authorization: `Bearer ${token}` } : {},
-    cache: "no-store",
-  });
+  const dashboardRes = await apiFetch('/dashboard', token);
 
   if (!dashboardRes.ok) {
     const text = await dashboardRes.text();
