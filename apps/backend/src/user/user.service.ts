@@ -19,8 +19,9 @@ export class UserService {
       first_name: user.first_name,
       last_name: user.last_name,
       email: user.email,
+      createdAt: user.createdAt,
       clerkUserId: user.clerkUserId,
-      properties: user.properties,
+      reports: user.reports,
       subscription: user.subscription,
     };
   }

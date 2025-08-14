@@ -2,7 +2,7 @@
 
 import MainLayout from "@components/Layout/MainLayout";
 import { Button } from "@components/ui/button";
-import { formatDate } from '@utils/DateFormatter';
+import { formatDate } from "@utils/DateFormatter";
 import {
   Card,
   CardContent,
@@ -23,48 +23,29 @@ import {
   Home,
 } from "lucide-react";
 import generatePropertyReport from "@utils/pdfGenerator";
+import { report } from "process";
 
 type DashboardClientProps = {
   first_name: string;
-  plan: string;
+  currentMonth: number;
+  averageRoi: number;
   reportsAllowed: number;
   reportsUsed: number;
+  recentReports: any[];
+  plan: string;
   currentPeriodEnd: Date;
-
 };
 
-const DashboardClient = ({ first_name, plan, reportsAllowed, reportsUsed, currentPeriodEnd }: DashboardClientProps) => {
-
-  const recentReports = [
-    {
-      id: 1,
-      address: "123 Investment Avenue, London",
-      date: "12 May 2025",
-      strategy: "Buy-to-Let",
-      roi: "6.2%",
-    },
-    {
-      id: 2,
-      address: "45 Profit Street, Manchester",
-      date: "8 May 2025",
-      strategy: "HMO",
-      roi: "9.6%",
-    },
-    {
-      id: 3,
-      address: "78 Capital Road, Birmingham",
-      date: "2 May 2025",
-      strategy: "Serviced Accommodation",
-      roi: "10.8%",
-    },
-  ];
-
-  // const subscription = {
-  //   plan: "Basic",
-  //   nextBilling: "15 Jun 2025",
-  //   reportsLeft: 3,
-  // };
-
+const DashboardClient = ({
+  first_name,
+  currentMonth,
+  averageRoi,
+  reportsAllowed,
+  reportsUsed,
+  recentReports,
+  plan,
+  currentPeriodEnd,
+}: DashboardClientProps) => {
   const handleDownloadReport = () => {
     generatePropertyReport();
     toast.success("Report downloaded successfully!");
@@ -96,9 +77,21 @@ const DashboardClient = ({ first_name, plan, reportsAllowed, reportsUsed, curren
             <CardContent>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                 {[
-                  { icon: FileText, label: "Total Reports", value: reportsAllowed },
-                  { icon: Calendar, label: "Current Month", value: 3 },
-                  { icon: BarChart3, label: "Average ROI", value: "7.9%" },
+                  {
+                    icon: FileText,
+                    label: "Total Reports",
+                    value: reportsAllowed,
+                  },
+                  {
+                    icon: Calendar,
+                    label: "Current Month",
+                    value: currentMonth,
+                  },
+                  {
+                    icon: BarChart3,
+                    label: "Average ROI",
+                    value: `${averageRoi}%`,
+                  },
                   {
                     icon: CreditCard,
                     label: "Reports Left",
@@ -139,15 +132,19 @@ const DashboardClient = ({ first_name, plan, reportsAllowed, reportsUsed, curren
                       <div>
                         <h4 className="font-medium">{report.address}</h4>
                         <div className="flex items-center gap-2 text-sm text-gray-500">
-                          <span>{report.strategy}</span>
+                          <span>{report.analysis.name}</span>
                           <span>•</span>
-                          <span>ROI: {report.roi}</span>
+                          <span>
+                            ROI:&nbsp;
+                            {report.analysis.roi}%
+                          </span>
                         </div>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-xs text-gray-500 flex items-center">
-                        <Clock className="h-3 w-3 mr-1" /> {report.date}
+                        <Clock className="h-3 w-3 mr-1" />
+                        {formatDate(report.createdAt)}&nbsp;
                       </span>
                       <Button
                         variant="ghost"
@@ -175,9 +172,7 @@ const DashboardClient = ({ first_name, plan, reportsAllowed, reportsUsed, curren
             <CardContent>
               <div className="space-y-4">
                 <div className="bg-blue-50 border border-blue-100 rounded-lg p-4">
-                  <h4 className="font-bold text-lg mb-1">
-                    {plan} Plan
-                  </h4>
+                  <h4 className="font-bold text-lg mb-1">{plan} Plan</h4>
                   <p className="text-sm text-gray-600">
                     Next billing: {formatDate(currentPeriodEnd)}
                   </p>

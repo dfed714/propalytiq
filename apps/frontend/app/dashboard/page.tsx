@@ -16,28 +16,29 @@ export default async function DashboardPage() {
 
   console.log(token);
 
-  const userRes = await fetch(`${API}${PREFIX}/user/me`, {
+  const dashboardRes = await fetch(`${API}${PREFIX}/dashboard`, {
     headers: token ? { Authorization: `Bearer ${token}` } : {},
     cache: "no-store",
   });
 
-  if (!userRes.ok) {
-    const text = await userRes.text();
-    console.error("Backend error:", userRes.status, text);
-    throw new Error(`Backend failed: ${userRes.status}`);
+  if (!dashboardRes.ok) {
+    const text = await dashboardRes.text();
+    console.error("Backend error:", dashboardRes.status, text);
+    throw new Error(`Backend failed: ${dashboardRes.status}`);
   }
 
-  const me = await userRes.json();
-
-  console.log(me);
+  const dashboard = await dashboardRes.json();
 
   return (
     <DashboardClient
-      first_name={me.first_name}
-      plan={me.subscription.plan}
-      reportsAllowed={me.subscription.reportsAllowed}
-      reportsUsed={me.subscription.reportsUsed}
-      currentPeriodEnd={me.subscription.currentPeriodEnd}
+      first_name={dashboard.first_name}
+      currentMonth={dashboard.currentMonth}
+      averageRoi={dashboard.averageRoi}
+      reportsAllowed={dashboard.subscription.reportsAllowed}
+      reportsUsed={dashboard.subscription.reportsUsed}
+      recentReports={dashboard.recentReports}
+      currentPeriodEnd={dashboard.subscription.currentPeriodEnd}
+      plan={dashboard.subscription.plan}
     />
   );
 }

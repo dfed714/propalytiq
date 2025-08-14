@@ -30,7 +30,8 @@
     "@propalytiq/shared": "workspace:*",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2",
-    "stripe": "^18.4.0"
+    "stripe": "^18.4.0",
+    "zod": "^4.0.17"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",

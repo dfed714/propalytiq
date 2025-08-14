@@ -16,6 +16,7 @@ model User {
     clerkUserId  String        @unique
     properties   Property[]
     files        File[]
+    reports      Report[]
     createdAt    DateTime      @default(now())
 }
 
@@ -26,12 +27,11 @@ model Subscription {
     status           String
     plan             String
     currentPeriodEnd DateTime // from Stripe
-    reportsAllowed   Int      // plan limit
+    reportsAllowed   Int // plan limit
     reportsUsed      Int      @default(0)
     updatedAt        DateTime @updatedAt
     user             User     @relation(fields: [userId], references: [id])
 }
-
 
 model Property {
     id      String   @id @default(cuid())
@@ -43,14 +43,16 @@ model Property {
 }
 
 model Report {
-    id         String   @id @default(cuid())
-    propertyId String
-    analysis   Json
-    pdfUrl     String?
-    createdAt  DateTime @default(now())
-    property   Property @relation(fields: [propertyId], references: [id])
+    id          String   @id @default(cuid())
+    propertyId  String
+    analysis    Json
+    address     String
+    pdfUrl      String?
+    createdAt   DateTime @default(now())
+    userId      String?
+    property    Property @relation(fields: [propertyId], references: [id])
+    User        User?    @relation(fields: [userId], references: [id])
 }
-
 
 model File {
     id     String @id @default(cuid())

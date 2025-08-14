@@ -40,8 +40,10 @@ CREATE TABLE "public"."Report" (
     "id" TEXT NOT NULL,
     "propertyId" TEXT NOT NULL,
     "analysis" JSONB NOT NULL,
+    "address" TEXT NOT NULL,
     "pdfUrl" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "userId" TEXT,
 
     CONSTRAINT "Report_pkey" PRIMARY KEY ("id")
 );
@@ -73,6 +75,9 @@ ALTER TABLE "public"."Property" ADD CONSTRAINT "Property_userId_fkey" FOREIGN KE
 
 -- AddForeignKey
 ALTER TABLE "public"."Report" ADD CONSTRAINT "Report_propertyId_fkey" FOREIGN KEY ("propertyId") REFERENCES "public"."Property"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."Report" ADD CONSTRAINT "Report_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "public"."File" ADD CONSTRAINT "File_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

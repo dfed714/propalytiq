@@ -9,9 +9,10 @@ export class UserRepository {
     const user = await this.prismaService.user.findUnique({
       where: { clerkUserId },
       include: {
-        properties: true,
+        reports: true,
         subscription: true,
       },
+      
     });
 
     if (!user) {
