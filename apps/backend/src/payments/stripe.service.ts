@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import Stripe from 'stripe';
 import type { Request } from 'express';
 
@@ -51,14 +51,16 @@ export class StripeService {
     });
   }
 
-  async getSubscription(subscriptionId: string) {
-    return await this.stripe.subscriptions.retrieve(subscriptionId, {
-      expand: ['items.data.plan.product'],
-    });
+  async getSubscription(stripeId: string) {
+    const sub = await this.stripe.subscriptions.retrieve(stripeId);
+    if (!sub) throw new NotFoundException('Subscription not found');
+    return sub;
   }
 
   async getProduct(productId: string) {
-    return await this.stripe.products.retrieve(productId);
+    const product = await this.stripe.products.retrieve(productId);
+    if (!product) throw new NotFoundException('Product not found');
+    return product;
   }
 
   constructEvent(req: Request): Stripe.Event {

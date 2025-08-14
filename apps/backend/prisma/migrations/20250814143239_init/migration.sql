@@ -5,6 +5,7 @@ CREATE TABLE "public"."User" (
     "first_name" TEXT NOT NULL,
     "last_name" TEXT NOT NULL,
     "clerkUserId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -16,6 +17,10 @@ CREATE TABLE "public"."Subscription" (
     "stripeId" TEXT NOT NULL,
     "status" TEXT NOT NULL,
     "plan" TEXT NOT NULL,
+    "currentPeriodEnd" TIMESTAMP(3) NOT NULL,
+    "reportsAllowed" INTEGER NOT NULL,
+    "reportsUsed" INTEGER NOT NULL DEFAULT 0,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Subscription_pkey" PRIMARY KEY ("id")
 );
@@ -36,6 +41,7 @@ CREATE TABLE "public"."Report" (
     "propertyId" TEXT NOT NULL,
     "analysis" JSONB NOT NULL,
     "pdfUrl" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Report_pkey" PRIMARY KEY ("id")
 );

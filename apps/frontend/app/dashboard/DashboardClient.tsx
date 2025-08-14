@@ -2,7 +2,7 @@
 
 import MainLayout from "@components/Layout/MainLayout";
 import { Button } from "@components/ui/button";
-import { formatStripeTimestamp } from '@utils/DateFormatter';
+import { formatDate } from '@utils/DateFormatter';
 import {
   Card,
   CardContent,
@@ -26,16 +26,15 @@ import generatePropertyReport from "@utils/pdfGenerator";
 
 type DashboardClientProps = {
   first_name: string;
-  subscription: {
-      plan: string,
-      billing_cycle_anchor: number;
-  }
+  plan: string;
+  reportsAllowed: number;
+  reportsUsed: number;
+  currentPeriodEnd: Date;
+
 };
 
-const DashboardClient = ({ first_name, subscription }: DashboardClientProps) => {
+const DashboardClient = ({ first_name, plan, reportsAllowed, reportsUsed, currentPeriodEnd }: DashboardClientProps) => {
 
-  console.log(subscription)
-  const nextBilling = formatStripeTimestamp(subscription.billing_cycle_anchor)
   const recentReports = [
     {
       id: 1,
@@ -97,13 +96,13 @@ const DashboardClient = ({ first_name, subscription }: DashboardClientProps) => 
             <CardContent>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                 {[
-                  { icon: FileText, label: "Total Reports", value: 12 },
+                  { icon: FileText, label: "Total Reports", value: reportsAllowed },
                   { icon: Calendar, label: "Current Month", value: 3 },
                   { icon: BarChart3, label: "Average ROI", value: "7.9%" },
                   {
                     icon: CreditCard,
                     label: "Reports Left",
-                    value: 'subscription.reportsLeft',
+                    value: reportsAllowed - reportsUsed,
                   },
                 ].map(({ icon: Icon, label, value }, i) => (
                   <div
@@ -177,16 +176,16 @@ const DashboardClient = ({ first_name, subscription }: DashboardClientProps) => 
               <div className="space-y-4">
                 <div className="bg-blue-50 border border-blue-100 rounded-lg p-4">
                   <h4 className="font-bold text-lg mb-1">
-                    {subscription.plan} Plan
+                    {plan} Plan
                   </h4>
                   <p className="text-sm text-gray-600">
-                    Next billing: {nextBilling}
+                    Next billing: {formatDate(currentPeriodEnd)}
                   </p>
                   <div className="mt-4 flex items-center justify-between">
                     <div>
                       <p className="text-xs text-gray-500">Reports Remaining</p>
                       <p className="font-bold">
-                        {'subscription.reportsLeft'} / 10
+                        {reportsAllowed - reportsUsed} / {reportsAllowed}
                       </p>
                     </div>
                     <Link href="/pricing">

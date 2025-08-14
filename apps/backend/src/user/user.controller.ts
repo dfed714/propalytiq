@@ -3,13 +3,13 @@ import { UserService } from './user.service';
 import { ClerkAuthGuard } from '../auth/clerk-auth.guard';
 
 @UseGuards(ClerkAuthGuard)
-@Controller('users')
+@Controller('user')
 export class UserController {
-  constructor(private readonly users: UserService) {}
+  constructor(private readonly user: UserService) {}
 
   @Get('me')
   async me(@Req() req: any) {
-    const clerkId = req.user.sub as string;
-    return this.users.getUserByClerkId(clerkId);
+    const clerkUserId = req.user.sub as string;
+    return this.user.getUserByClerkId(clerkUserId);
   }
 }

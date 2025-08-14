@@ -16,7 +16,7 @@ export default async function DashboardPage() {
 
   console.log(token);
 
-  const userRes = await fetch(`${API}${PREFIX}/users/me`, {
+  const userRes = await fetch(`${API}${PREFIX}/user/me`, {
     headers: token ? { Authorization: `Bearer ${token}` } : {},
     cache: "no-store",
   });
@@ -29,13 +29,15 @@ export default async function DashboardPage() {
 
   const me = await userRes.json();
 
+  console.log(me);
+
   return (
     <DashboardClient
       first_name={me.first_name}
-        subscription= {{
-          plan: me.product.name,
-          billing_cycle_anchor: me.subscription.billing_cycle_anchor,
-        }}
+      plan={me.subscription.plan}
+      reportsAllowed={me.subscription.reportsAllowed}
+      reportsUsed={me.subscription.reportsUsed}
+      currentPeriodEnd={me.subscription.currentPeriodEnd}
     />
   );
 }
