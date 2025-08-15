@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^6.30.0",
+    "@clerk/types": "^4.78.0",
     "@propalytiq/shared": "workspace:*",
     "@radix-ui/react-accordion": "^1.2.11",
     "@radix-ui/react-dialog": "^1.1.14",

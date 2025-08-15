@@ -10,6 +10,7 @@ async function main() {
       first_name: 'Daniel',
       last_name: 'Feddy',
       email: 'daniel.feddy0123@gmail.com',
+      email_reports: false,
       clerkUserId: 'user_319CwggYVslwK4CkeIoKJdGojpK',
       createdAt: new Date('2025-08-01T10:00:00Z'), // account creation date
     },

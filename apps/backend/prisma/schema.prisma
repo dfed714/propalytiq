@@ -8,16 +8,20 @@ datasource db {
 }
 
 model User {
-    id           String        @id @default(cuid())
-    email        String        @unique
-    first_name   String
-    last_name    String
-    subscription Subscription?
-    clerkUserId  String        @unique
-    properties   Property[]
-    files        File[]
-    reports      Report[]
-    createdAt    DateTime      @default(now())
+    id              String        @id @default(cuid())
+    email           String        @unique
+    first_name      String
+    last_name       String
+    subscription    Subscription?
+    clerkUserId     String        @unique
+    email_reports   Boolean       @default(true)
+    market_updates  Boolean       @default(true)
+    product_updates Boolean       @default(true)
+    security_alerts Boolean       @default(true)
+    properties      Property[]
+    files           File[]
+    reports         Report[]
+    createdAt       DateTime      @default(now())
 }
 
 model Subscription {
@@ -43,15 +47,15 @@ model Property {
 }
 
 model Report {
-    id          String   @id @default(cuid())
-    propertyId  String
-    analysis    Json
-    address     String
-    pdfUrl      String?
-    createdAt   DateTime @default(now())
-    userId      String?
-    property    Property @relation(fields: [propertyId], references: [id])
-    User        User?    @relation(fields: [userId], references: [id])
+    id         String   @id @default(cuid())
+    propertyId String
+    analysis   Json
+    address    String
+    pdfUrl     String?
+    createdAt  DateTime @default(now())
+    userId     String?
+    property   Property @relation(fields: [propertyId], references: [id])
+    User       User?    @relation(fields: [userId], references: [id])
 }
 
 model File {

@@ -1,2 +1,1 @@
-export const API_BASE = process.env.API_URL;
-export const API_PREFIX = process.env.API_PREFIX;
+export const API_URL= process.env.NEXT_PUBLIC_API_URL!;

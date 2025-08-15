@@ -5,6 +5,10 @@ CREATE TABLE "public"."User" (
     "first_name" TEXT NOT NULL,
     "last_name" TEXT NOT NULL,
     "clerkUserId" TEXT NOT NULL,
+    "email_reports" BOOLEAN NOT NULL DEFAULT true,
+    "market_updates" BOOLEAN NOT NULL DEFAULT true,
+    "product_updates" BOOLEAN NOT NULL DEFAULT true,
+    "security_alerts" BOOLEAN NOT NULL DEFAULT true,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
