@@ -57,6 +57,24 @@ export class StripeService {
     return sub;
   }
 
+  async getCustomer(customerId: string) {
+    const cus = await this.stripe.customers.retrieve(customerId);
+    if (!cus) throw new NotFoundException('Customer not found');
+    return cus;
+  }
+
+  async getPaymentMethod(paymentMethodId: string) {
+    return this.stripe.paymentMethods.retrieve(paymentMethodId);
+  }
+
+  async listInvoices(customerId: string, limit = 10) {
+    return this.stripe.invoices.list({ customer: customerId, limit });
+  }
+
+  async getSource(customerId: string, sourceId: string) {
+    return this.stripe.customers.retrieveSource(customerId, sourceId);
+  }
+
   async getProduct(productId: string) {
     const product = await this.stripe.products.retrieve(productId);
     if (!product) throw new NotFoundException('Product not found');

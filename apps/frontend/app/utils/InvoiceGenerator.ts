@@ -10,6 +10,7 @@ export interface InvoiceData {
   paymentMethod: string;
   customerName: string;
   customerEmail: string;
+  paymentStatus: string;
 }
 
 export const generateInvoicePDF = (invoiceData: InvoiceData) => {
@@ -92,7 +93,7 @@ export const generateInvoicePDF = (invoiceData: InvoiceData) => {
   doc.text('Payment Information:', 20, 182);
   doc.setFont('helvetica', 'normal');
   doc.text(`Payment Method: ${invoiceData.paymentMethod}`, 20, 189);
-  doc.text(`Payment Status: Paid`, 20, 196);
+  doc.text(`Payment Status: ${invoiceData.paymentStatus}`, 20, 196);
   
   // Thank you message
   doc.setFillColor(secondaryColor);
