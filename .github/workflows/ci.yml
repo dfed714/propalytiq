@@ -1,0 +1,45 @@
+name: web-ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: web-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  web:
+    runs-on: ubuntu-latest
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+      CI: 'true'
+    defaults:
+      run:
+        working-directory: apps/web
+    steps:
+      # Purpose: check out your code
+      - uses: actions/checkout@v4
+
+      # Purpose: Node 20 and pnpm store cache
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      # Purpose: enable pnpm via Corepack on the runner
+      - run: corepack enable
+      - run: corepack prepare pnpm@9.7.0 --activate
+
+      # Purpose: sanity print versions for easier debugging
+      - run: pnpm -v && node -v
+
+      # Purpose: install deps at the workspace root (monorepo-aware)
+      - name: Install deps (workspace root)
+        working-directory: .
+        run: pnpm -w install
+
+      # Purpose: build Next.js app in apps/web (Webpack by default)
+      - name: Build web
+        run: pnpm build
