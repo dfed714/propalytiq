@@ -1,0 +1,44 @@
+name: ping-ci
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+  schedule:
+    - cron: "*/15 * * * *" # every 15 minutes (UTC). Change/remove later.
+
+concurrency:
+  group: ping-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Show environment and prove it runs
+      - name: Print time (UTC and Asia/Jerusalem)
+        run: |
+          echo "UTC: $(date -u)"
+          TZ=Asia/Jerusalem date
+
+      # Optional: if you use pnpm later, this proves Corepack works on runners
+      - name: Corepack + pnpm version
+        run: |
+          corepack enable
+          corepack prepare pnpm@9.7.0 --activate
+          pnpm -v
+
+      # Nice green badge in the job summary tab
+      - name: Job summary
+        run: echo "### ✅ Actions are working" >> $GITHUB_STEP_SUMMARY
+
+      # Produce an artifact so you can confirm outputs
+      - name: Write artifact
+        run: echo "hello from $(date -u)" > ping.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ping-artifact
+          path: ping.txt
