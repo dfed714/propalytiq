@@ -19,22 +19,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Node (adds Corepack, too)
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'pnpm'     # enables lockfile-based cache
+          cache: 'pnpm'   # cache based on pnpm-lock.yaml
 
-      # ✅ Install pnpm and add it to PATH
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 9.7.0
-          run_install: false
+      # ✅ Always make pnpm available on PATH
+      - name: Install pnpm
+        run: npm i -g pnpm@9.7.0
 
-      # Sanity: prove pnpm is on PATH
-      - run: pnpm -v && node -v
+      # Quick sanity check + PATH debug if ever needed
+      - run: pnpm -v && node -v && which pnpm && echo "$PATH"
 
-      # Install once at the workspace root (monorepo-friendly)
+      # Install once at workspace root (monorepo-friendly)
       - name: Install deps (workspace root)
         run: pnpm -w install
 
