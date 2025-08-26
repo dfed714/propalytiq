@@ -1,3 +1,4 @@
+# .github/workflows/ci.yml
 name: web-ci
 
 on:
@@ -15,31 +16,28 @@ jobs:
     env:
       NEXT_TELEMETRY_DISABLED: '1'
       CI: 'true'
-    defaults:
-      run:
-        working-directory: apps/web
     steps:
-      # Purpose: check out your code
       - uses: actions/checkout@v4
 
-      # Purpose: Node 20 and pnpm store cache
+      # Node (adds corepack too, but we'll explicitly install pnpm next)
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'pnpm'
+          cache: 'pnpm'   # cache based on pnpm-lock.yaml at repo root
 
-      # Purpose: enable pnpm via Corepack on the runner
-      - run: corepack enable
-      - run: corepack prepare pnpm@9.7.0 --activate
+      # ✅ Ensure pnpm is installed and on PATH
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.7.0
+          run_install: false
 
-      # Purpose: sanity print versions for easier debugging
+      # Sanity check
       - run: pnpm -v && node -v
 
-      # Purpose: install deps at the workspace root (monorepo-aware)
+      # Workspace install at repo root (monorepo-friendly)
       - name: Install deps (workspace root)
-        working-directory: .
         run: pnpm -w install
 
-      # Purpose: build Next.js app in apps/web (Webpack by default)
+      # Build only the web app
       - name: Build web
-        run: pnpm build
+        run: pnpm -F web build
