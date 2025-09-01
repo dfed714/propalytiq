@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
@@ -162,8 +163,6 @@ const UnifiedPropertyForm: React.FC<UnifiedPropertyFormProps> = ({
     const submitData = {
       ...formData,
       price: formattedPrice,
-      image:
-        "https://images.unsplash.com/photo-1518780664697-55e3ad937233?q=80&w=2145&auto=format&fit=crop",
       uploadedFiles: uploadedFiles.length,
     };
 

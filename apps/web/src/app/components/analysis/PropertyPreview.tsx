@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import React from "react";
@@ -42,11 +43,35 @@ const PropertyPreview: React.FC<PropertyPreviewProps> = ({
 }) => {
   const [investmentStrategy, setInvestmentStrategy] = React.useState("");
 
+  // Optional inputs state
+  const [renovationBudget, setRenovationBudget] = React.useState<string>("");
+  const [expectedMonthlyRental, setExpectedMonthlyRental] =
+    React.useState<string>("");
+  const [mortgageRate, setMortgageRate] = React.useState<string>("");
+  const [investmentGoal, setInvestmentGoal] = React.useState<string>("");
+
   const handleAnalyze = () => {
     if (!investmentStrategy) {
       toast.error("Please select an investment strategy");
       return;
     }
+
+    // Build the combined payload to log
+    const payload = {
+      ...propertyData,
+      investmentStrategy,
+      renovationBudget: renovationBudget || null, // strings (or null if empty)
+      expectedMonthlyRental: expectedMonthlyRental || null,
+      mortgageRate: mortgageRate || null,
+      investmentGoal: investmentGoal || null,
+    };
+
+    // Log the JSON object
+    // (You'll see it in the browser devtools console)
+    // If you prefer strict JSON text, you could do: console.log(JSON.stringify(payload));
+    console.log(payload);
+
+    // Keep existing behavior (navigate / sessionStorage save upstream)
     onAnalyze();
   };
 
