@@ -46,7 +46,6 @@ export async function serverApiJson<T>(
   init: RequestInit = {}
 ): Promise<T> {
   const res = await serverApiFetch(path, init);
-  console.log(res);
   if (res.status === 401) redirect("/login");
   if (!res.ok) {
     const text = await res.text().catch(() => "");

@@ -2,6 +2,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AccountModule } from './modules/account/module';
+import { AiModule } from '@modules/ai/module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { AccountModule } from './modules/account/module';
       envFilePath: ['apps/backend/.env', '.env', '.env.local'],
     }),
     AccountModule,
+    AiModule,
   ],
 })
 export class AppModule {}
