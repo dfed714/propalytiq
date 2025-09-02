@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React from "react";
@@ -34,7 +34,7 @@ interface PropertyData {
 
 interface PropertyPreviewProps {
   propertyData: PropertyData;
-  onAnalyze: () => void;
+  onAnalyze: (payload: any) => void;
 }
 
 const PropertyPreview: React.FC<PropertyPreviewProps> = ({
@@ -56,23 +56,18 @@ const PropertyPreview: React.FC<PropertyPreviewProps> = ({
       return;
     }
 
-    // Build the combined payload to log
     const payload = {
       ...propertyData,
       investmentStrategy,
-      renovationBudget: renovationBudget || null, // strings (or null if empty)
+      renovationBudget: renovationBudget || null,
       expectedMonthlyRental: expectedMonthlyRental || null,
       mortgageRate: mortgageRate || null,
       investmentGoal: investmentGoal || null,
     };
 
-    // Log the JSON object
-    // (You'll see it in the browser devtools console)
-    // If you prefer strict JSON text, you could do: console.log(JSON.stringify(payload));
     console.log(payload);
 
-    // Keep existing behavior (navigate / sessionStorage save upstream)
-    onAnalyze();
+    onAnalyze(payload); // ✅ pass it up
   };
 
   return (

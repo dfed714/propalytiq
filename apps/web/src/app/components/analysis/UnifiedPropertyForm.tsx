@@ -28,8 +28,8 @@ type FormState = {
   price: string;
   priceType: "purchase" | "rent";
   rentPeriod: "monthly" | "yearly";
-  bedrooms: string;
-  bathrooms: string;
+  bedrooms: number;
+  bathrooms: number;
   description: string;
   propertyType: string;
 };
@@ -39,8 +39,8 @@ const DEFAULT_FORM: FormState = {
   price: "",
   priceType: "purchase",
   rentPeriod: "monthly",
-  bedrooms: "",
-  bathrooms: "",
+  bedrooms: 0,
+  bathrooms: 0,
   description: "",
   propertyType: "",
 };
@@ -98,9 +98,13 @@ const UnifiedPropertyForm: React.FC<UnifiedPropertyFormProps> = ({
       priceType,
       rentPeriod: "monthly",
       bedrooms:
-        o?.number_of_bedrooms != null ? String(o.number_of_bedrooms) : "",
+        o.number_of_bedrooms !== null && o.number_of_bedrooms !== undefined
+          ? o.number_of_bedrooms
+          : 0,
       bathrooms:
-        o?.number_of_bathrooms != null ? String(o.number_of_bathrooms) : "",
+        o.number_of_bathrooms !== null && o.number_of_bathrooms !== undefined
+          ? o.number_of_bathrooms
+          : 0,
       description: o?.property_description ?? "",
       propertyType: normalizePropertyType(o?.property_type),
     };
@@ -386,39 +390,24 @@ const UnifiedPropertyForm: React.FC<UnifiedPropertyFormProps> = ({
 
           <div>
             <Label htmlFor="bedrooms">Bedrooms</Label>
-            <Select
+            <Input
+              id="bedrooms"
+              type="number"
+              placeholder="3"
               value={formData.bedrooms}
-              onValueChange={(value) => handleInputChange("bedrooms", value)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Number of bedrooms" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="1">1 Bedroom</SelectItem>
-                <SelectItem value="2">2 Bedrooms</SelectItem>
-                <SelectItem value="3">3 Bedrooms</SelectItem>
-                <SelectItem value="4">4 Bedrooms</SelectItem>
-                <SelectItem value="5">5+ Bedrooms</SelectItem>
-              </SelectContent>
-            </Select>
+              onChange={(e) => handleInputChange("bedrooms", e.target.value)}
+            />
           </div>
 
           <div>
             <Label htmlFor="bathrooms">Bathrooms</Label>
-            <Select
+            <Input
+              id="bathrooms"
+              type="number"
+              placeholder="3"
               value={formData.bathrooms}
-              onValueChange={(value) => handleInputChange("bathrooms", value)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Number of bathrooms" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="1">1 Bathroom</SelectItem>
-                <SelectItem value="2">2 Bathrooms</SelectItem>
-                <SelectItem value="3">3 Bathrooms</SelectItem>
-                <SelectItem value="4">4+ Bathrooms</SelectItem>
-              </SelectContent>
-            </Select>
+              onChange={(e) => handleInputChange("bathrooms", e.target.value)}
+            />
           </div>
 
           <div className="md:col-span-2">

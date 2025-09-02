@@ -3,6 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SupabaseAuthGuard } from './auth/supabase-auth.guard';
 import { json } from 'express';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -12,6 +13,12 @@ async function bootstrap() {
     },
   });
   const guard = app.get(SupabaseAuthGuard);
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      transform: true, // so @Type(() => Number) works
+    }),
+  );
   app.useGlobalGuards(guard);
   app.setGlobalPrefix('api');
   // Stripe needs the raw body on its webhook route:
