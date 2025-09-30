@@ -1,4 +1,3 @@
-// apps/frontend/lib/client-api.ts
 "use client";
 import { createBrowserSupabase } from "@/lib/supabase/browser";
 

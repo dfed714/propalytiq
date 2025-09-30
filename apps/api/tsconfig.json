@@ -4,6 +4,7 @@
       "@db": ["src/db"],
       "@auth/*": ["src/auth/*"],
       "@modules/*": ["src/modules/*"],
+      "@utils/*": ["src/utils/*"],
       "@enums/*": ["src/enums/*"]
     },
     "types": ["node"],

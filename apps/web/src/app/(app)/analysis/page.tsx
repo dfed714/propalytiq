@@ -5,7 +5,7 @@ import { getAccount } from "@lib/api/account";
 import AnalysisClient from "./AnalysisClient";
 import { getPropertyInfo } from "@/lib/api/ai";
 
-export default async function DashboardPage() {
+export default async function AnalysisPage() {
   const { user } = await getAuth();
   if (!user) redirect("/login");
   const account = user ? await getAccount() : null;

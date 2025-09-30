@@ -8,6 +8,8 @@ export default async function HomePage() {
   const { session } = await getSessionOrNull();
   const account = session ? await getAccount() : null;
 
+  console.log(session?.access_token);
+
   return (
     <MainLayout
       isAuthenticated={!!session}

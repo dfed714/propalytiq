@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-import { IsIn, IsNumber, IsOptional, IsString } from 'class-validator';
+// dtos.ts
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export type Strategy =
@@ -7,71 +7,59 @@ export type Strategy =
   | 'Buy-To-Let'
   | 'Serviced Accommodation'
   | 'Flips'
-  | 'Flip'
   | 'HMO'
   | 'Rent-To-Rent';
 
 export class AnalysisRequestDto {
   @IsString()
   @IsOptional()
-  property_address: string | null;
+  property_address?: string | null;
 
   @Type(() => Number)
   @IsNumber()
   @IsOptional()
-  purchase_price: number | null;
+  purchase_price?: number | null;
 
   @Type(() => Number)
   @IsNumber()
   @IsOptional()
-  rental_price_per_month: number | null;
+  rental_price_per_month?: number | null;
 
   @Type(() => Number)
   @IsNumber()
   @IsOptional()
-  number_of_bedrooms: number | null;
+  number_of_bedrooms?: number | null;
 
   @Type(() => Number)
   @IsNumber()
   @IsOptional()
-  number_of_bathrooms: number | null;
-
-  @Type(() => Number)
-  @IsNumber()
-  @IsOptional()
-  square_footage: number | null;
+  number_of_bathrooms?: number | null;
 
   @IsString()
   @IsOptional()
-  property_type: string | null;
+  property_type?: string | null;
 
   @IsString()
   @IsOptional()
-  property_description: string | null;
+  property_description?: string | null;
 
-  @IsIn([
-    'Buy-Refurbish-Refinance',
-    'Buy-To-Let',
-    'Serviced Accommodation',
-    'Flips',
-    'Flip',
-    'HMO',
-    'Rent-To-Rent',
-  ])
-  strategy: Strategy;
+  @IsString()
+  @IsOptional()
+  investment_strategy: string;
 
   @IsOptional()
-  additional?: {
-    budget?: number | null;
-    desired_monthly_income?: number | null;
-    mortgage_interest_rate?: number | null;
-    primary_investment_goal?: string | null;
-  };
+  budget?: number | null;
+  @IsOptional()
+  desired_monthly_income?: number | null;
+  @IsOptional()
+  mortgage_interest_rate?: number | null;
+  @IsOptional()
+  primary_investment_goal?: string | null;
 }
 
 export type AnalysisResponse = {
-  strategy: string;
-  top_stats: Record<string, number | null>;
+  investment_strategy: string;
+  top_stats: Record<string, number>;
   projection: {
     x_label: string;
     y_label: string;
@@ -84,4 +72,5 @@ export type AnalysisResponse = {
   };
   strengths: string[];
   weaknesses: string[];
+  recommendations: string[];
 };

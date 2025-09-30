@@ -32,8 +32,6 @@ export async function serverApiFetch(path: string, init: RequestInit = {}) {
     headers.set("content-type", "application/json");
   }
 
-  console.log(`${BASE}${path}`);
-
   return fetch(`${BASE}${path}`, {
     ...init,
     headers,

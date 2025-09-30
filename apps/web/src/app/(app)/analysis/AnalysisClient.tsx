@@ -22,12 +22,12 @@ const AnalysisClient: React.FC<AnalysisClientProps> = ({
 
   const handleAnalyze = (data: any) => {
     try {
-      console.log(data);
       sessionStorage.setItem("propertyData", JSON.stringify(data));
+      console.log(sessionStorage.getItem("propertyData"));
     } catch {
       // ignore storage errors (private mode)
     }
-    // router.push("/processing");
+    router.push("/processing");
   };
 
   return (

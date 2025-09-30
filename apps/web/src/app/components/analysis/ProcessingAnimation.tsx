@@ -25,7 +25,7 @@ const ProcessingAnimation = () => {
   useEffect(() => {
     let frameId = 0;
     let startTime = 0;
-    const duration = 18000; // 18 seconds total
+    const duration = 25000; // 18 seconds total
 
     const animate = (timestamp: number) => {
       if (!startTime) startTime = timestamp;

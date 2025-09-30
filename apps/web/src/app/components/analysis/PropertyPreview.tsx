@@ -24,12 +24,18 @@ import PropertyMap from "@components/maps/PropertyMap";
 
 interface PropertyData {
   address: string;
-  price: string;
-  bedrooms: string | number;
   bathrooms: string | number;
+  bedrooms: string | number;
   description: string;
-  propertyType?: string;
-  image?: string; // keep if you still sometimes show images
+  price: string;
+  price_type: "purchase" | "rent";
+  rent_period?: "monthly" | "yearly";
+  property_type?: string;
+  investmentStrategy?: number;
+  investment_goal?: string;
+  renovation_budget?: number;
+  expected_monthly_rental?: number;
+  mortgage_rate?: number;
 }
 
 interface PropertyPreviewProps {
@@ -41,13 +47,22 @@ const PropertyPreview: React.FC<PropertyPreviewProps> = ({
   propertyData,
   onAnalyze,
 }) => {
-  const [investmentStrategy, setInvestmentStrategy] = React.useState("");
+  const rentingStrategy = propertyData.price_type === "rent";
+
+  const [investmentStrategy, setInvestmentStrategy] =
+    React.useState<string>("");
+
+  React.useEffect(() => {
+    if (rentingStrategy) {
+      setInvestmentStrategy("Rent-To-Rent");
+    }
+  }, [rentingStrategy]);
 
   // Optional inputs state
-  const [renovationBudget, setRenovationBudget] = React.useState<string>("");
+  const [renovationBudget, setRenovationBudget] = React.useState<number>(0);
   const [expectedMonthlyRental, setExpectedMonthlyRental] =
-    React.useState<string>("");
-  const [mortgageRate, setMortgageRate] = React.useState<string>("");
+    React.useState<number>(0);
+  const [mortgageRate, setMortgageRate] = React.useState<number>(0);
   const [investmentGoal, setInvestmentGoal] = React.useState<string>("");
 
   const handleAnalyze = () => {
@@ -58,16 +73,14 @@ const PropertyPreview: React.FC<PropertyPreviewProps> = ({
 
     const payload = {
       ...propertyData,
-      investmentStrategy,
-      renovationBudget: renovationBudget || null,
-      expectedMonthlyRental: expectedMonthlyRental || null,
-      mortgageRate: mortgageRate || null,
-      investmentGoal: investmentGoal || null,
+      investmentStrategy: investmentStrategy,
+      investment_goal: investmentGoal || null,
+      renovation_budget: renovationBudget || null,
+      expected_monthly_rental: expectedMonthlyRental || null,
+      mortgage_rate: mortgageRate || null,
     };
 
-    console.log(payload);
-
-    onAnalyze(payload); // ✅ pass it up
+    onAnalyze(payload);
   };
 
   return (
@@ -112,41 +125,62 @@ const PropertyPreview: React.FC<PropertyPreviewProps> = ({
           <h3 className="text-xl font-semibold mb-4">
             Select Your Investment Strategy
           </h3>
-          <Select onValueChange={setInvestmentStrategy}>
+          <Select
+            onValueChange={setInvestmentStrategy}
+            value={rentingStrategy ? "Rent-To-Rent" : investmentStrategy}
+            disabled={rentingStrategy} // lock it when renting
+          >
             <SelectTrigger className="border-purple-200 focus:border-purple-500">
               <SelectValue placeholder="Choose a strategy" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="btl">Buy-to-Let</SelectItem>
-              <SelectItem value="brr">Buy-Refurbish-Refinance</SelectItem>
-              <SelectItem value="sa">
-                Serviced Accommodation / Airbnb
-              </SelectItem>
-              <SelectItem value="hmo">
-                HMO (House in Multiple Occupation)
-              </SelectItem>
+              {rentingStrategy ? (
+                <SelectItem value="Rent-To-Rent">Rent-To-Rent</SelectItem>
+              ) : (
+                <>
+                  <SelectItem value="Buy-To-Let">Buy-to-Let</SelectItem>
+                  <SelectItem value="Buy-Refurbish-Refinance">
+                    Buy-Refurbish-Refinance
+                  </SelectItem>
+                  <SelectItem value="Serviced Accommodation">
+                    Serviced Accommodation / Airbnb
+                  </SelectItem>
+                  <SelectItem value="Flips">Flips</SelectItem>
+                  <SelectItem value="HMO">
+                    HMO (House in Multiple Occupation)
+                  </SelectItem>
+                  <SelectItem value="Rent-To-Rent">Rent-To-Rent</SelectItem>
+                </>
+              )}
             </SelectContent>
           </Select>
 
           {investmentStrategy && (
             <div className="mt-4 rounded-lg border border-purple-200 p-4">
               <h4 className="font-medium text-purple-700">
-                {investmentStrategy === "btl" && "Buy-to-Let Strategy"}
-                {investmentStrategy === "brr" &&
+                {investmentStrategy === "Buy-To-Let" && "Buy-to-Let Strategy"}
+                {investmentStrategy === "Buy-Refurbish-Refinance" &&
                   "Buy-Refurbish-Refinance Strategy"}
-                {investmentStrategy === "sa" &&
+                {investmentStrategy === "Serviced Accommodation" &&
                   "Serviced Accommodation Strategy"}
-                {investmentStrategy === "hmo" && "HMO Strategy"}
+                {investmentStrategy === "HMO" && "HMO Strategy"}
+                {investmentStrategy === "Flips" && "Flips Strategy"}
+                {investmentStrategy === "Rent-To-Rent" &&
+                  "Rent-To-Rent Strategy"}
               </h4>
               <p className="mt-2 text-sm text-gray-600">
-                {investmentStrategy === "btl" &&
+                {investmentStrategy === "Buy-To-Let" &&
                   "Purchase a property with the primary aim of renting it out to tenants for regular monthly income."}
-                {investmentStrategy === "brr" &&
+                {investmentStrategy === "Buy-Refurbish-Refinance" &&
                   "Buy a property below market value, renovate to increase its value, then refinance to pull out capital for your next investment."}
-                {investmentStrategy === "sa" &&
+                {investmentStrategy === "Services Accommodation" &&
                   "Offer short-term, fully furnished accommodation to guests, typically at higher rates than standard rentals."}
-                {investmentStrategy === "hmo" &&
+                {investmentStrategy === "HMO" &&
                   "Rent individual rooms to multiple tenants who share common facilities like kitchens and bathrooms."}
+                {investmentStrategy === "Flips" &&
+                  "Buy properties with the intention of renovating and reselling them quickly for a profit."}
+                {investmentStrategy === "Rent-To-Rent" &&
+                  "You lease a property legally on a commercial agreement and re-rent via Airbnb/short-term lets."}
               </p>
             </div>
           )}
@@ -164,9 +198,12 @@ const PropertyPreview: React.FC<PropertyPreviewProps> = ({
                     Renovation Budget (£)
                   </Label>
                   <Input
+                    onChange={(e) =>
+                      setRenovationBudget(Number(e.target.value))
+                    }
                     id="renovation-budget"
                     placeholder="e.g. 15000"
-                    type="text"
+                    type="number"
                     className="mt-1"
                   />
                 </div>
@@ -176,9 +213,12 @@ const PropertyPreview: React.FC<PropertyPreviewProps> = ({
                     Expected Monthly Rental (£)
                   </Label>
                   <Input
+                    onChange={(e) =>
+                      setExpectedMonthlyRental(Number(e.target.value))
+                    }
                     id="monthly-rental"
                     placeholder="e.g. 1200"
-                    type="text"
+                    type="number"
                     className="mt-1"
                   />
                 </div>
@@ -188,9 +228,10 @@ const PropertyPreview: React.FC<PropertyPreviewProps> = ({
                     Mortgage Interest Rate (%)
                   </Label>
                   <Input
+                    onChange={(e) => setMortgageRate(Number(e.target.value))}
                     id="mortgage-rate"
                     placeholder="e.g. 4.5"
-                    type="text"
+                    type="number"
                     className="mt-1"
                   />
                 </div>
@@ -199,7 +240,7 @@ const PropertyPreview: React.FC<PropertyPreviewProps> = ({
                   <Label htmlFor="investment-goal">
                     Primary Investment Goal
                   </Label>
-                  <Select>
+                  <Select onValueChange={setInvestmentGoal}>
                     <SelectTrigger id="investment-goal" className="mt-1">
                       <SelectValue placeholder="Select your main goal" />
                     </SelectTrigger>
@@ -210,8 +251,12 @@ const PropertyPreview: React.FC<PropertyPreviewProps> = ({
                       <SelectItem value="capital-growth">
                         Capital Growth
                       </SelectItem>
-                      <SelectItem value="mixed">Balanced Approach</SelectItem>
-                      <SelectItem value="flip">Quick Flip/Resale</SelectItem>
+                      <SelectItem value="balanced">
+                        Balanced Approach
+                      </SelectItem>
+                      <SelectItem value="quick-resale">
+                        Quick Flip/Resale
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

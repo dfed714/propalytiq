@@ -39,8 +39,8 @@ const DEFAULT_FORM: FormState = {
   price: "",
   priceType: "purchase",
   rentPeriod: "monthly",
-  bedrooms: 0,
-  bathrooms: 0,
+  bedrooms: 3,
+  bathrooms: 3,
   description: "",
   propertyType: "",
 };
