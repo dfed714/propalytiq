@@ -23,7 +23,6 @@ const AnalysisClient: React.FC<AnalysisClientProps> = ({
   const handleAnalyze = (data: any) => {
     try {
       sessionStorage.setItem("propertyData", JSON.stringify(data));
-      console.log(sessionStorage.getItem("propertyData"));
     } catch {
       // ignore storage errors (private mode)
     }

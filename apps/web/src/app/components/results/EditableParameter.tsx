@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
 import { Button } from "@components/ui/button";
 import { Input } from "@components/ui/input";
@@ -27,43 +28,83 @@ interface PropertyData {
   description: string;
   propertyType?: string;
   image?: string;
+  renovationBudget?: string | number;
+  expectedMonthlyRental?: string | number;
+  mortgageRate?: string | number;
+  investmentGoal?: string;
+  investmentStrategy: string;
 }
 
 interface EditableParametersProps {
   propertyData: PropertyData;
-  investmentStrategy: string;
   onRegenerate: (newStrategy: string, parameters: any) => void;
 }
 
 const EditableParameters: React.FC<EditableParametersProps> = ({
   propertyData,
-  investmentStrategy,
   onRegenerate,
 }) => {
-  const [currentStrategy, setCurrentStrategy] = useState(investmentStrategy);
+  const router = useRouter();
+  const [currentStrategy, setCurrentStrategy] = useState("");
   const [renovationBudget, setRenovationBudget] = useState("");
   const [monthlyRental, setMonthlyRental] = useState("");
   const [mortgageRate, setMortgageRate] = useState("");
   const [investmentGoal, setInvestmentGoal] = useState("");
 
+  // Initialize state with propertyData values when component mounts or propertyData changes
+  useEffect(() => {
+    setCurrentStrategy(propertyData.investmentStrategy);
+    setRenovationBudget(propertyData.renovationBudget?.toString() || ""); // Use price as fallback for renovation budget if available
+    setMonthlyRental(propertyData.expectedMonthlyRental?.toString() || "");
+
+    console.log(propertyData.expectedMonthlyRental);
+    setMortgageRate(propertyData.mortgageRate?.toString() || "");
+    setInvestmentGoal(propertyData.investmentGoal || "");
+  }, [propertyData]);
+
   const handleRegenerate = () => {
     const parameters = {
-      renovationBudget,
-      monthlyRental,
-      mortgageRate,
-      investmentGoal,
+      renovationBudget: renovationBudget || undefined,
+      monthlyRental: monthlyRental || undefined,
+      mortgageRate: mortgageRate || undefined,
+      investmentGoal: investmentGoal || undefined,
     };
-    onRegenerate(currentStrategy, parameters);
+
+    // Update propertyData with new values
+    const updatedPropertyData = {
+      ...propertyData,
+      renovationBudget: renovationBudget || undefined,
+      expectedMonthlyRental: monthlyRental || undefined,
+      mortgageRate: mortgageRate || undefined,
+      investmentGoal: investmentGoal || undefined,
+      investmentStrategy: currentStrategy, // Update strategy
+    };
+
+    // Save to sessionStorage and redirect
+    try {
+      sessionStorage.setItem(
+        "propertyData",
+        JSON.stringify(updatedPropertyData)
+      );
+    } catch {
+      // Ignore storage errors (e.g., private mode)
+    }
+    router.push("/processing");
   };
 
-  const getStrategyName = (strategy: string) => {
-    const names = {
-      btl: "Buy-to-Let",
-      brr: "Buy-Refurbish-Refinance",
-      sa: "Serviced Accommodation / Airbnb",
-      hmo: "HMO (House in Multiple Occupation)",
-    };
-    return strategy in names ? names[strategy as keyof typeof names] : strategy;
+  const selectedStrategy = (strategy: string) => {
+    switch (strategy) {
+      case "Buy-To-Let":
+        return "btl";
+      case "Buy-Refurbish-Refinance":
+        return "brr";
+      case "Serviced Accommodation / Airbnb":
+        return "sa";
+      case "HMO (House in Multiple Occupation)":
+        return "hmo";
+      default:
+        return "";
+    }
   };
 
   return (
@@ -80,11 +121,11 @@ const EditableParameters: React.FC<EditableParametersProps> = ({
             <div>
               <Label htmlFor="strategy">Investment Strategy</Label>
               <Select
-                value={currentStrategy}
+                value={selectedStrategy(currentStrategy)}
                 onValueChange={setCurrentStrategy}
               >
                 <SelectTrigger id="strategy" className="mt-1">
-                  <SelectValue />
+                  <SelectValue placeholder="Select strategy" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="btl">Buy-to-Let</SelectItem>
@@ -156,7 +197,7 @@ const EditableParameters: React.FC<EditableParametersProps> = ({
                 variant="outline"
               >
                 <RefreshCw className="h-4 w-4 mr-2" />
-                Regenerate (1 Report Use)
+                Regenerate Report
               </Button>
             </div>
           </div>

@@ -17,75 +17,50 @@ import {
 } from "@components/ui/dialog";
 import { Banknote } from "lucide-react";
 import Link from "next/link";
-
-// Simulating a user subscription tier for demo purposes
-// In a real app, this would come from authentication context
-type SubscriptionTier = "free" | "basic" | "pro" | "enterprise";
+import ProcessingAnimation from "@components/analysis/ProcessingAnimation";
 
 const ResultsClient = () => {
   const router = useRouter();
   const [propertyData, setPropertyData] = useState<any>(null);
+  const [analysisData, setAnalysisData] = useState<any>(null);
   const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
-
-  // Demo purpose only - in real app this would come from auth context
-  const [userTier, setUserTier] = useState<SubscriptionTier>("basic");
 
   useEffect(() => {
     // Retrieve property data from sessionStorage.analysisData
-    const storedData = sessionStorage.getItem("analysisData");
+    const storedPropertyData = sessionStorage.getItem("propertyData");
+    const storedAnalysisData = sessionStorage.getItem("analysisData");
 
-    if (storedData) {
-      const parsedData = JSON.parse(storedData);
+    if (storedPropertyData && storedAnalysisData) {
+      const parsedPropertyData = JSON.parse(storedPropertyData);
       setPropertyData({
-        address: parsedData.address,
-        price: parsedData.price,
-        bedrooms: parsedData.bedrooms,
-        bathrooms: parsedData.bathrooms,
-        description: parsedData.description,
-        propertyType: parsedData.propertyType,
-        investmentStrategy: parsedData.investmentStrategy,
-        investmentGoal: parsedData.investmentGoal,
-        renovationBudget: parsedData.renovationBudget,
-        expectedMonthlyRental: parsedData.expectedMonthlyRental,
-        mortgageRate: parsedData.mortgageRate,
-        top_stats: parsedData.top_stats || {
-          "ROI (%)": 0,
-          "Rental Yield (%)": 0,
-          "Monthly Income (£)": parsedData.expectedMonthlyRental || 0,
-          "Monthly Cashflow (£)": 0,
-        },
-        projection: parsedData.projection || {
-          x_label: "Years (1–25)",
-          y_label: "Net Cashflow (£)",
-          points: Array.from({ length: 25 }, (_, i) => ({
-            x: i + 1,
-            y: 0,
-          })),
-        },
-        strengths: parsedData.strengths || [
-          "Potential for steady rental income.",
-          "Suitable property type for investment goals.",
-          "Location may support property value growth.",
-        ],
-        weaknesses: parsedData.weaknesses || [
-          "Cashflow depends on accurate expense estimates.",
-          "Interest rate risks could impact returns.",
-          "Requires consistent tenant occupancy.",
-        ],
+        address: parsedPropertyData.address,
+        price: parsedPropertyData.price,
+        bedrooms: parsedPropertyData.bedrooms,
+        bathrooms: parsedPropertyData.bathrooms,
+        description: parsedPropertyData.description,
+        propertyType: parsedPropertyData.propertyType,
+        investmentStrategy: parsedPropertyData.investmentStrategy,
+        investmentGoal: parsedPropertyData.investmentGoal,
+        renovationBudget: parsedPropertyData.renovationBudget,
+        expectedMonthlyRental: parsedPropertyData.expectedMonthlyRental,
+        mortgageRate: parsedPropertyData.mortgageRate,
+      });
+
+      const parsedAnalysisData = JSON.parse(storedAnalysisData);
+      setAnalysisData({
+        investmentStrategy: parsedAnalysisData.investmentStrategy,
+        top_stats: parsedAnalysisData.top_stats,
+        projection: parsedAnalysisData.projection,
+        strengths: parsedAnalysisData.strengths,
+        weaknesses: parsedAnalysisData.weaknesses,
+        recommendations: parsedAnalysisData.recommendations,
       });
     } else {
       router.push("/analysis"); // Redirect if no data is found
     }
   }, [router]);
 
-  // Simulate a randomly selected investment strategy for demo purposes
-  const strategies = ["btl", "brr", "sa", "hmo"];
-  const [selectedStrategy, setSelectedStrategy] = useState(() => {
-    return strategies[Math.floor(Math.random() * strategies.length)];
-  });
-
   const handleRegenerate = (newStrategy: string, parameters: any) => {
-    setSelectedStrategy(newStrategy);
     const updatedData = {
       ...propertyData,
       investmentStrategy: newStrategy,
@@ -96,12 +71,10 @@ const ResultsClient = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const handleUpgradeClick = () => {
-    setShowUpgradeDialog(true);
-  };
-
   if (!propertyData) {
-    return <div>Loading...</div>; // Simple loading state
+    return <ProcessingAnimation />;
+  } else {
+    console.log("Property Data:", propertyData);
   }
 
   return (
@@ -115,14 +88,11 @@ const ResultsClient = () => {
 
       <EditableParameters
         propertyData={propertyData}
-        investmentStrategy={selectedStrategy}
         onRegenerate={handleRegenerate}
       />
       <InvestmentReport
         propertyData={propertyData}
-        investmentStrategy={selectedStrategy}
-        userTier={userTier}
-        onUpgradeClick={handleUpgradeClick}
+        analysisData={analysisData}
       />
 
       <Dialog open={showUpgradeDialog} onOpenChange={setShowUpgradeDialog}>
