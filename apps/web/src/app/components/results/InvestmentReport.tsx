@@ -33,12 +33,12 @@ interface PropertyData {
   bedrooms: string | number;
   bathrooms: string | number;
   description: string;
-  propertyType?: string;
-  investmentStrategy?: string;
+  property_type?: string;
+  investment_strategy?: string;
 }
 
 interface AnalysisData {
-  investmentStrategy?: string;
+  investment_strategy?: string;
   top_stats: Record<string, number>;
   projection: {
     x_label: string;
@@ -68,18 +68,12 @@ const InvestmentReport: React.FC<InvestmentReportProps> = ({
     try {
       generatePropertyReport({ propertyData, analysisData });
       toast.success(
-        "Report export functionality will be available in the full version DEMO"
+        "Report export functionality will be available in the full version"
       );
     } catch (error) {
       console.error("Error generating PDF:", error);
       toast.error("Failed to generate PDF. Please try again.");
     }
-  };
-
-  const handleShare = () => {
-    toast.success(
-      "Report sharing functionality will be available in the full version DEMO"
-    );
   };
 
   const cashFlowData: CashFlowDataPoint[] = analysisData.projection.points.map(
@@ -94,10 +88,10 @@ const InvestmentReport: React.FC<InvestmentReportProps> = ({
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle>{propertyData.investmentStrategy}</CardTitle>
+            <CardTitle>{propertyData.investment_strategy}</CardTitle>
             <CardDescription>
               Based on {propertyData.bedrooms} bedroom{" "}
-              {propertyData.propertyType || "property"}
+              {propertyData.property_type || "property"}
               &nbsp;priced at {propertyData.price}
             </CardDescription>
           </CardHeader>

@@ -1,15 +1,20 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Body, Controller, Post } from '@nestjs/common';
 import { AiService } from './service';
-import { AnalysisRequestDto } from './dtos/analysis.dto';
-import type { AnalysisResponse } from './dtos/analysis.dto';
-import { GetPropertyInfoDto } from './dtos/property-info.dto';
+import type {
+  AnalysisRequestDto,
+  AnalysisResponseDto,
+  GetPropertyInfoDto,
+} from '@dtos';
 
 @Controller('ai')
 export class AiController {
   constructor(private readonly ai: AiService) {}
 
   @Post('analysis')
-  async analysis(@Body() body: AnalysisRequestDto): Promise<AnalysisResponse> {
+  async analysis(
+    @Body() body: AnalysisRequestDto,
+  ): Promise<AnalysisResponseDto> {
     return this.ai.analysis(body); // delegate everything
   }
 

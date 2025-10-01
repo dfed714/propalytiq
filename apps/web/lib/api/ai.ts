@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { serverApiJson } from "@lib/server-api";
+import type { AnalysisRequestDto, GetPropertyInfoDto } from "@dtos";
 
-export async function getPropertyInfo(url: string) {
+export async function getPropertyInfo(propertyInfo: GetPropertyInfoDto) {
   return serverApiJson<{
     id: string;
     model: string;
@@ -9,12 +10,11 @@ export async function getPropertyInfo(url: string) {
     usage: any | null;
   }>("/ai/property-info", {
     method: "POST",
-    body: JSON.stringify({ url: url }),
+    body: JSON.stringify(propertyInfo),
   });
 }
 
-export async function analysis(data: string) {
-  console.log("Calling analysis API with data:", data);
+export async function analysis(data: AnalysisRequestDto) {
   return serverApiJson<{
     id: string;
     model: string;

@@ -26,58 +26,51 @@ interface PropertyData {
   bedrooms: string | number;
   bathrooms: string | number;
   description: string;
-  propertyType?: string;
+  property_type?: string;
   image?: string;
-  renovationBudget?: string | number;
-  expectedMonthlyRental?: string | number;
-  mortgageRate?: string | number;
-  investmentGoal?: string;
-  investmentStrategy: string;
+  renovation_budget?: string | number;
+  expected_monthly_rental?: string | number;
+  mortgage_interest_rate?: string | number;
+  investment_goal?: string;
+  investment_strategy: string;
 }
 
 interface EditableParametersProps {
   propertyData: PropertyData;
-  onRegenerate: (newStrategy: string, parameters: any) => void;
 }
 
 const EditableParameters: React.FC<EditableParametersProps> = ({
   propertyData,
-  onRegenerate,
 }) => {
   const router = useRouter();
   const [currentStrategy, setCurrentStrategy] = useState("");
   const [renovationBudget, setRenovationBudget] = useState("");
-  const [monthlyRental, setMonthlyRental] = useState("");
-  const [mortgageRate, setMortgageRate] = useState("");
+  const [expectedMonthlyRental, setExpectedMonthlyRental] = useState("");
+  const [mortgageInterestRate, setMortgageInterestRate] = useState("");
   const [investmentGoal, setInvestmentGoal] = useState("");
 
   // Initialize state with propertyData values when component mounts or propertyData changes
   useEffect(() => {
-    setCurrentStrategy(propertyData.investmentStrategy);
-    setRenovationBudget(propertyData.renovationBudget?.toString() || ""); // Use price as fallback for renovation budget if available
-    setMonthlyRental(propertyData.expectedMonthlyRental?.toString() || "");
-
-    console.log(propertyData.expectedMonthlyRental);
-    setMortgageRate(propertyData.mortgageRate?.toString() || "");
-    setInvestmentGoal(propertyData.investmentGoal || "");
+    setCurrentStrategy(propertyData.investment_strategy);
+    setRenovationBudget(propertyData.renovation_budget?.toString() || ""); // Use price as fallback for renovation budget if available
+    setExpectedMonthlyRental(
+      propertyData.expected_monthly_rental?.toString() || ""
+    );
+    setMortgageInterestRate(
+      propertyData.mortgage_interest_rate?.toString() || ""
+    );
+    setInvestmentGoal(propertyData.investment_goal || "");
   }, [propertyData]);
 
   const handleRegenerate = () => {
-    const parameters = {
-      renovationBudget: renovationBudget || undefined,
-      monthlyRental: monthlyRental || undefined,
-      mortgageRate: mortgageRate || undefined,
-      investmentGoal: investmentGoal || undefined,
-    };
-
     // Update propertyData with new values
     const updatedPropertyData = {
       ...propertyData,
-      renovationBudget: renovationBudget || undefined,
-      expectedMonthlyRental: monthlyRental || undefined,
-      mortgageRate: mortgageRate || undefined,
-      investmentGoal: investmentGoal || undefined,
-      investmentStrategy: currentStrategy, // Update strategy
+      renovation_budget: renovationBudget || undefined,
+      expected_monthly_rental: expectedMonthlyRental || undefined,
+      mortgage_interest_rate: mortgageInterestRate || undefined,
+      investment_goal: investmentGoal || undefined,
+      investment_strategy: selectedStrategyName(currentStrategy), // Update strategy
     };
 
     // Save to sessionStorage and redirect
@@ -102,6 +95,21 @@ const EditableParameters: React.FC<EditableParametersProps> = ({
         return "sa";
       case "HMO (House in Multiple Occupation)":
         return "hmo";
+      default:
+        return "";
+    }
+  };
+
+  const selectedStrategyName = (strategy: string) => {
+    switch (strategy) {
+      case "btl":
+        return "Buy-To-Let";
+      case "brr":
+        return "Buy-Refurbish-Refinance";
+      case "sa":
+        return "Serviced Accommodation / Airbnb";
+      case "hmo":
+        return "HMO (House in Multiple Occupation)";
       default:
         return "";
     }
@@ -158,8 +166,8 @@ const EditableParameters: React.FC<EditableParametersProps> = ({
               <Input
                 id="monthly-rental"
                 placeholder="e.g. 1200"
-                value={monthlyRental}
-                onChange={(e) => setMonthlyRental(e.target.value)}
+                value={expectedMonthlyRental}
+                onChange={(e) => setExpectedMonthlyRental(e.target.value)}
                 className="mt-1"
               />
             </div>
@@ -169,8 +177,8 @@ const EditableParameters: React.FC<EditableParametersProps> = ({
               <Input
                 id="mortgage-rate"
                 placeholder="e.g. 4.5"
-                value={mortgageRate}
-                onChange={(e) => setMortgageRate(e.target.value)}
+                value={mortgageInterestRate}
+                onChange={(e) => setMortgageInterestRate(e.target.value)}
                 className="mt-1"
               />
             </div>

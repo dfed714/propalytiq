@@ -4,6 +4,7 @@ import { getAuth } from "@/lib/auth";
 import { getAccount } from "@lib/api/account";
 import AnalysisClient from "./AnalysisClient";
 import { getPropertyInfo } from "@/lib/api/ai";
+import { GetPropertyInfoDto } from "@dtos";
 
 export default async function AnalysisPage() {
   const { user } = await getAuth();
@@ -11,7 +12,7 @@ export default async function AnalysisPage() {
   const account = user ? await getAccount() : null;
 
   // Server Action: can be passed to client components
-  async function fetchPropertyInfo(url: string) {
+  async function fetchPropertyInfo(url: GetPropertyInfoDto) {
     "use server";
     // You can add auth/tenant checks here if needed
     const data = await getPropertyInfo(url);

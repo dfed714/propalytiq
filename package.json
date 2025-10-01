@@ -2,8 +2,7 @@
   "name": "propalytiq",
   "private": true,
   "workspaces": [
-    "apps/*",
-    "packages/*"
+    "apps/api", "apps/web", "apps/shared"
   ],
   "scripts": {
     "dev:web": "pnpm --filter web dev",

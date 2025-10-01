@@ -9,7 +9,7 @@ import { AiModule } from '@modules/ai/module';
     ConfigModule.forRoot({
       isGlobal: true,
       // point to your monorepo path(s)
-      envFilePath: ['apps/backend/.env', '.env', '.env.local'],
+      envFilePath: ['apps/api/.env', '.env', '.env.local'],
     }),
     AccountModule,
     AiModule,

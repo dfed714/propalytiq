@@ -5,9 +5,10 @@
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import ProcessingAnimation from "@components/analysis/ProcessingAnimation";
+import { AnalysisRequestDto } from "@dtos";
 
 type ProcessingClientProps = {
-  fetchPropertyAnalysis: (propertyData: string) => Promise<any>; // Server Action
+  fetchPropertyAnalysis: (propertyData: AnalysisRequestDto) => Promise<any>; // Server Action
 };
 
 const ProcessingClient: React.FC<ProcessingClientProps> = ({
@@ -17,17 +18,19 @@ const ProcessingClient: React.FC<ProcessingClientProps> = ({
 
   useEffect(() => {
     const propertyData = sessionStorage.getItem("propertyData");
-    if (propertyData) {
-      fetchPropertyAnalysis(propertyData)
+    const parsedPropertyData: AnalysisRequestDto | null = propertyData
+      ? JSON.parse(propertyData)
+      : null;
+    if (parsedPropertyData) {
+      fetchPropertyAnalysis(parsedPropertyData)
         .then((data) => {
-          console.log("Received analysis data:", data);
           // Store analysis data in sessionStorage for results page
           sessionStorage.setItem("analysisData", JSON.stringify(data));
           router.push("/results");
         })
         .catch((error) => {
           console.error("Failed to fetch property analysis:", error);
-          // router.push("/error"); // Redirect to error page
+          router.push("/analysis"); // Redirect to start if no data
         });
     } else {
       console.error("No property data found in sessionStorage.");

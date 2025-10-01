@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 // apps/backend/src/modules/account/service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
 import {
@@ -5,7 +7,7 @@ import {
   updateEmailPrefs,
   updateProfileRow,
 } from './repository';
-import { UpdateProfileDto } from './dto/update-profile.dto';
+import { UpdateProfileDto } from '@dtos';
 
 export type AccountResponse = {
   user: {

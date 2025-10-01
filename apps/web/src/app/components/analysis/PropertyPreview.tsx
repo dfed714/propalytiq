@@ -31,11 +31,11 @@ interface PropertyData {
   price_type: "purchase" | "rent";
   rent_period?: "monthly" | "yearly";
   property_type?: string;
-  investmentStrategy?: number;
+  investment_strategy?: number;
   investment_goal?: string;
   renovation_budget?: number;
   expected_monthly_rental?: number;
-  mortgage_rate?: number;
+  mortgage_interest_rate?: number;
 }
 
 interface PropertyPreviewProps {
@@ -62,7 +62,8 @@ const PropertyPreview: React.FC<PropertyPreviewProps> = ({
   const [renovationBudget, setRenovationBudget] = React.useState<number>(0);
   const [expectedMonthlyRental, setExpectedMonthlyRental] =
     React.useState<number>(0);
-  const [mortgageRate, setMortgageRate] = React.useState<number>(0);
+  const [mortgageInterestRate, setMortgageInterestRate] =
+    React.useState<number>(0);
   const [investmentGoal, setInvestmentGoal] = React.useState<string>("");
 
   const handleAnalyze = () => {
@@ -73,11 +74,11 @@ const PropertyPreview: React.FC<PropertyPreviewProps> = ({
 
     const payload = {
       ...propertyData,
-      investmentStrategy: investmentStrategy,
+      investment_strategy: investmentStrategy,
       investment_goal: investmentGoal || null,
       renovation_budget: renovationBudget || null,
       expected_monthly_rental: expectedMonthlyRental || null,
-      mortgage_rate: mortgageRate || null,
+      mortgage_interest_rate: mortgageInterestRate || null,
     };
 
     onAnalyze(payload);
@@ -228,7 +229,9 @@ const PropertyPreview: React.FC<PropertyPreviewProps> = ({
                     Mortgage Interest Rate (%)
                   </Label>
                   <Input
-                    onChange={(e) => setMortgageRate(Number(e.target.value))}
+                    onChange={(e) =>
+                      setMortgageInterestRate(Number(e.target.value))
+                    }
                     id="mortgage-rate"
                     placeholder="e.g. 4.5"
                     type="number"

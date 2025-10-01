@@ -5,7 +5,8 @@
       "@auth/*": ["src/auth/*"],
       "@modules/*": ["src/modules/*"],
       "@utils/*": ["src/utils/*"],
-      "@enums/*": ["src/enums/*"]
+      "@enums/*": ["src/enums/*"],
+      "@dtos": ["../shared"]
     },
     "types": ["node"],
     "module": "nodenext",

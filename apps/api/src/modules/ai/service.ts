@@ -1,11 +1,16 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Injectable, BadRequestException } from '@nestjs/common';
 import OpenAI from 'openai';
-import { PropertyInfoDto } from './dtos/property-info.dto';
-import { AnalysisRequestDto, AnalysisResponse } from './dtos/analysis.dto';
+import {
+  PropertyInfoDto,
+  AnalysisRequestDto,
+  AnalysisResponseDto,
+} from '@dtos';
 import { coerceNum, safeParseJson } from '@utils/property-scrape.util';
+import { empty } from 'rxjs';
 
 @Injectable()
 export class AiService {
@@ -40,7 +45,15 @@ export class AiService {
         throw new Error('bad protocol');
       }
     } catch {
-      const empty = new PropertyInfoDto();
+      const empty: PropertyInfoDto = {
+        property_address: '',
+        purchase_price: null,
+        rental_price_per_month: null,
+        number_of_bedrooms: null,
+        number_of_bathrooms: null,
+        property_type: null,
+        property_description: null,
+      };
       return {
         id: 'invalid-url',
         model,
@@ -77,8 +90,9 @@ Rules:
     const raw = (resp as any).output_text ?? JSON.stringify(resp.output);
     const parsed = safeParseJson(raw) ?? {};
 
-    // Coerce + sanitize into your DTO shape
-    const cleaned: PropertyInfoDto = Object.assign(new PropertyInfoDto(), {
+    console.log('Got HERE');
+
+    const cleaned: PropertyInfoDto = {
       property_address: parsed.property_address ?? null,
       purchase_price: coerceNum(parsed.purchase_price),
       rental_price_per_month: coerceNum(parsed.rental_price_per_month),
@@ -86,7 +100,7 @@ Rules:
       number_of_bathrooms: coerceNum(parsed.number_of_bathrooms),
       property_type: parsed.property_type ?? null,
       property_description: parsed.property_description ?? null,
-    });
+    };
 
     return {
       id: resp.id,
@@ -98,7 +112,7 @@ Rules:
 
   // ---------------------------------------------------------------------------
 
-  async analysis(body: AnalysisRequestDto): Promise<AnalysisResponse> {
+  async analysis(body: AnalysisRequestDto): Promise<AnalysisResponseDto> {
     console.log('AI Service received body:', body);
     if (!body?.investment_strategy) {
       throw new BadRequestException('strategy is required');
@@ -156,11 +170,11 @@ Rules:
                 x_kind: 'months_1_12',
               },
             }
-          : norm.includes('brrr') ||
+          : norm.includes('brr') ||
               norm.includes('buy-refurbish-refinance') ||
               norm.includes('buy refurbish refinance')
             ? {
-                label: 'Buy-Refurbish-Refinance (BRRR)',
+                label: 'Buy-Refurbish-Refinance (BRR)',
                 topStats: [
                   'Initial Investment (£) (Deposit + Refurbishment)',
                   'Refinance Value (£)',
@@ -170,7 +184,7 @@ Rules:
                 projection: {
                   x_label: 'Stages (Purchase → Renovation → Refinance → Rent)',
                   y_label: 'Net Cash Invested (£)',
-                  x_kind: 'stages_brrr',
+                  x_kind: 'stages_brr',
                 },
               }
             : norm.includes('flip') ||
@@ -251,7 +265,7 @@ TASK:
     * Ensure "x" is always a number or string as specified, and "y" is always a number (no nulls or undefined).
     * For "years_1_25": x = 1..25 (integers), y = the cumulative net cashflow accumulated up to that year (sum of annual net cashflows from year 1 to the current x, reflecting ongoing cashflow trends with reasonable growth or decline based on input data or defaults).
     * For "months_1_12": x = 1..12 (integers), y = the cumulative net cashflow/profit accumulated up to that month (sum of monthly net cashflows from month 1 to the current x, accounting for seasonal variations if applicable).
-    * For "stages_brrr": x in ["Purchase","Renovation","Refinance","Rent"] (strings), y = the cumulative net cash invested or returned at each stage (reflecting the running total of cash flow from the start through each phase).
+    * For "stages_brr": x in ["Purchase","Renovation","Refinance","Rent"] (strings), y = the cumulative net cash invested or returned at each stage (reflecting the running total of cash flow from the start through each phase).
     * For "timeline_flip": x = integers from 0 to sale_month (inclusive), each point MUST include "costs" (cumulative total costs up to that month) and "expected_sale_price" (constant ARV); "y" is the cumulative net profit/loss up to that month if provided, calculated as expected_sale_price minus cumulative costs.
   - If you need to assume values to compute points, do so reasonably based on UK property market averages (e.g., 3% annual rent growth, 2% expense inflation, 75% LTV mortgage) to avoid an empty "points" array. Always provide at least the minimum points required for the x_kind.
 - "strengths", "weaknesses", and "recommendations" MUST each contain 3–4 short, strategy-specific strings based on the calculated data and assumptions.
@@ -291,6 +305,6 @@ Return ONLY JSON with this exact TypeScript shape (no extra keys, no prose):
     if (!parsed) {
       throw new BadRequestException('failed to parse analysis JSON');
     }
-    return parsed as AnalysisResponse;
+    return parsed as AnalysisResponseDto;
   }
 }

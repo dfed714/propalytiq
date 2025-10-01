@@ -39,16 +39,16 @@ const ResultsClient = () => {
         bathrooms: parsedPropertyData.bathrooms,
         description: parsedPropertyData.description,
         propertyType: parsedPropertyData.propertyType,
-        investmentStrategy: parsedPropertyData.investmentStrategy,
-        investmentGoal: parsedPropertyData.investmentGoal,
-        renovationBudget: parsedPropertyData.renovationBudget,
-        expectedMonthlyRental: parsedPropertyData.expectedMonthlyRental,
-        mortgageRate: parsedPropertyData.mortgageRate,
+        investment_strategy: parsedPropertyData.investment_strategy,
+        investment_goal: parsedPropertyData.investment_goal,
+        renovation_budget: parsedPropertyData.renovation_budget,
+        expected_monthly_rental: parsedPropertyData.expected_monthly_rental,
+        mortgage_interest_rate: parsedPropertyData.mortgage_interest_rate,
       });
 
       const parsedAnalysisData = JSON.parse(storedAnalysisData);
       setAnalysisData({
-        investmentStrategy: parsedAnalysisData.investmentStrategy,
+        investment_strategy: parsedAnalysisData.investment_strategy,
         top_stats: parsedAnalysisData.top_stats,
         projection: parsedAnalysisData.projection,
         strengths: parsedAnalysisData.strengths,
@@ -56,20 +56,9 @@ const ResultsClient = () => {
         recommendations: parsedAnalysisData.recommendations,
       });
     } else {
-      router.push("/analysis"); // Redirect if no data is found
+      // router.push("/analysis"); // Redirect if no data is found
     }
   }, [router]);
-
-  const handleRegenerate = (newStrategy: string, parameters: any) => {
-    const updatedData = {
-      ...propertyData,
-      investmentStrategy: newStrategy,
-      ...parameters,
-    };
-    sessionStorage.setItem("analysisData", JSON.stringify(updatedData));
-    setPropertyData(updatedData);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
 
   if (!propertyData) {
     return <ProcessingAnimation />;
@@ -86,10 +75,7 @@ const ResultsClient = () => {
         <p className="text-lg sm:text-xl opacity-90">{propertyData.address}</p>
       </div>
 
-      <EditableParameters
-        propertyData={propertyData}
-        onRegenerate={handleRegenerate}
-      />
+      <EditableParameters propertyData={propertyData} />
       <InvestmentReport
         propertyData={propertyData}
         analysisData={analysisData}

@@ -2,7 +2,7 @@
 import { Body, Controller, Get, Patch, UseGuards, Req } from '@nestjs/common';
 import { SupabaseAuthGuard } from '@auth/supabase-auth.guard';
 import { AccountService } from './service';
-import { UpdateProfileDto } from './dto/update-profile.dto';
+import type { UpdateProfileDto } from '@dtos';
 
 @Controller('account')
 @UseGuards(SupabaseAuthGuard)

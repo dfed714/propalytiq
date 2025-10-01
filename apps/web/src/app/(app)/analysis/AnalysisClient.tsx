@@ -5,9 +5,10 @@ import React, { useState } from "react";
 import UnifiedPropertyForm from "@components/analysis/UnifiedPropertyForm";
 import PropertyPreview from "@components/analysis/PropertyPreview";
 import { useRouter } from "next/navigation";
+import { GetPropertyInfoDto } from "@dtos";
 
 type AnalysisClientProps = {
-  fetchPropertyInfo: (url: string) => Promise<any>; // Server Action
+  fetchPropertyInfo: (url: GetPropertyInfoDto) => Promise<any>; // Server Action
 };
 
 const AnalysisClient: React.FC<AnalysisClientProps> = ({
@@ -25,6 +26,7 @@ const AnalysisClient: React.FC<AnalysisClientProps> = ({
       sessionStorage.setItem("propertyData", JSON.stringify(data));
     } catch {
       // ignore storage errors (private mode)
+      console.warn("Session storage is not available.");
     }
     router.push("/processing");
   };
