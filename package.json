@@ -5,6 +5,7 @@
     "apps/api", "apps/web", "apps/shared"
   ],
   "scripts": {
+    "build": "next build",
     "dev:web": "pnpm --filter web dev",
     "dev:api": "pnpm --filter api start:dev",
     "dev": "concurrently -k -n WEB,API \"pnpm dev:web\" \"pnpm dev:api\""
