@@ -31,7 +31,7 @@ export default async function DashboardPage() {
     if (user == null) redirect("/login");
     // You can add auth/tenant checks here if needed
     const data = await getAllReports(user?.id, offset, 3);
-    return data; // must be serializable
+    return data ?? []; // must be serializable
   }
 
   const firstName = account.user.first_name;
