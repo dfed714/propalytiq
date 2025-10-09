@@ -8,7 +8,7 @@ import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     cors: {
-      origin: ['http://localhost:3000'], // your Next.js app
+      origin: ['https://propalytiq.netlify.com'], // your Next.js app
       credentials: true,
     },
   });
