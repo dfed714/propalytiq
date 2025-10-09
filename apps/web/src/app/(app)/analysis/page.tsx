@@ -22,7 +22,7 @@ export default async function AnalysisPage() {
   return (
     <MainLayout
       isAuthenticated={!!user}
-      firstName={account?.user.firstName ?? undefined}
+      firstName={account?.user.first_name ?? undefined}
     >
       <AnalysisClient fetchPropertyInfo={fetchPropertyInfo} />
     </MainLayout>

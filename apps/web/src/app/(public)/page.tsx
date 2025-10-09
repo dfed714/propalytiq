@@ -13,7 +13,7 @@ export default async function HomePage() {
   return (
     <MainLayout
       isAuthenticated={!!session}
-      firstName={account?.user.firstName ?? undefined}
+      firstName={account?.user.first_name ?? undefined}
     >
       <HomeClient />
     </MainLayout>

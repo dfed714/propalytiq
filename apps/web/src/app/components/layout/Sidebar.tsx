@@ -18,7 +18,7 @@ const sidebarItems = [
   { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard" },
   { icon: FileBarChart, label: "Reports", href: "/reports" },
   { icon: BarChart3, label: "Analysis", href: "/analysis" },
-  { icon: CreditCard, label: "Billing", href: "/billing" },
+  // { icon: CreditCard, label: "Billing", href: "/billing" },
   { icon: Settings, label: "Settings", href: "/settings" },
 ];
 

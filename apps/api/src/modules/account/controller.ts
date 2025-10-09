@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-redundant-type-constituents */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Body, Controller, Get, Patch, UseGuards, Req } from '@nestjs/common';
 import { SupabaseAuthGuard } from '@auth/supabase-auth.guard';
 import { AccountService } from './service';
-import type { UpdateProfileDto } from '@dtos';
+import type { DashboardMetrics } from '@dtos';
 
 @Controller('account')
 @UseGuards(SupabaseAuthGuard)
@@ -29,7 +30,19 @@ export class AccountController {
   }
 
   @Patch('profile')
-  updateProfile(@Req() req: any, @Body() dto: UpdateProfileDto) {
-    return this.service.updateProfile(req.user.id, dto);
+  updateProfile(
+    @Req() req: any,
+    @Body()
+    body: {
+      first_name: string;
+      last_name: string;
+    },
+  ) {
+    return this.service.updateProfile(req.user.id, body);
+  }
+
+  @Get('metrics')
+  getMetrics(@Req() req: any): Promise<DashboardMetrics | null> {
+    return this.service.getMetrics(req.user.id);
   }
 }

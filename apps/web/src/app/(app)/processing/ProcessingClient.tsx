@@ -5,7 +5,7 @@
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import ProcessingAnimation from "@components/analysis/ProcessingAnimation";
-import { AnalysisRequestDto } from "@dtos";
+import { Analysis, AnalysisRequestDto, Property } from "@dtos";
 
 type ProcessingClientProps = {
   fetchPropertyAnalysis: (propertyData: AnalysisRequestDto) => Promise<any>; // Server Action

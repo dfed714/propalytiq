@@ -26,33 +26,11 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-
-interface PropertyData {
-  address: string;
-  price: string;
-  bedrooms: string | number;
-  bathrooms: string | number;
-  description: string;
-  property_type?: string;
-  investment_strategy?: string;
-}
-
-interface AnalysisData {
-  investment_strategy?: string;
-  top_stats: Record<string, number>;
-  projection: {
-    x_label: string;
-    y_label: string;
-    points: Array<{ x: number | string; y: number }>;
-  };
-  strengths: string[];
-  weaknesses: string[];
-  recommendations: string[];
-}
+import { Analysis, Property } from "@dtos";
 
 interface InvestmentReportProps {
-  analysisData: AnalysisData;
-  propertyData: PropertyData;
+  analysisData: Analysis;
+  propertyData: Property;
 }
 
 interface CashFlowDataPoint {

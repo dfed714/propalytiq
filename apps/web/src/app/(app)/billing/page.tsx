@@ -9,8 +9,6 @@ export default async function BillingPage() {
   const { user } = await getAuth();
   if (!user) redirect("/login");
 
-  console.log("User:", user);
-
   return (
     <MainLayout isAuthenticated>
       <h1>Billing Page</h1>

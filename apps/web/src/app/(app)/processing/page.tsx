@@ -6,7 +6,8 @@ import { getAuth } from "@/lib/auth";
 import { getAccount } from "@lib/api/account";
 import ProcessingClient from "./ProcessingClient";
 import { analysis } from "@/lib/api/ai";
-import { AnalysisRequestDto } from "@dtos";
+import { Analysis, AnalysisRequestDto, Property, ReportInfoDto } from "@dtos";
+import { createReport } from "@lib/api/report";
 
 export default async function ProcessingPage() {
   const { user } = await getAuth();
@@ -28,7 +29,7 @@ export default async function ProcessingPage() {
   return (
     <MainLayout
       isAuthenticated={!!user}
-      firstName={account?.user.firstName ?? undefined}
+      firstName={account?.user.first_name ?? undefined}
     >
       <ProcessingClient fetchPropertyAnalysis={fetchPropertyAnalysis} />
     </MainLayout>

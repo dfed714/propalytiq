@@ -89,12 +89,12 @@ const Header = ({ isAuthenticated, firstName }: HeaderProps) => {
                           Settings
                         </Link>
                       </Button>
-                      <Button variant="ghost" asChild className="justify-start">
+                      {/* <Button variant="ghost" asChild className="justify-start">
                         <Link href="/billing">
                           <CreditCard className="h-4 w-4 mr-2" />
                           Billing
                         </Link>
-                      </Button>
+                      </Button> */}
                       <Button variant="ghost" asChild className="justify-start">
                         <Link href="/">
                           <LogOut className="h-4 w-4 mr-2" />
@@ -138,12 +138,12 @@ const Header = ({ isAuthenticated, firstName }: HeaderProps) => {
                         Settings
                       </Link>
                     </Button>
-                    <Button variant="ghost" asChild className="justify-start">
+                    {/* <Button variant="ghost" asChild className="justify-start">
                       <Link href="/billing">
                         <CreditCard className="h-4 w-4 mr-2" />
                         Billing
                       </Link>
-                    </Button>
+                    </Button> */}
                     <Button variant="ghost" asChild className="justify-start">
                       <Link href="/">
                         <LogOut className="h-4 w-4 mr-2" />
@@ -233,13 +233,13 @@ const Header = ({ isAuthenticated, firstName }: HeaderProps) => {
                       Account
                     </h3>
                   </div>
-                  <Link
+                  {/* <Link
                     href="/billing"
                     className="block px-3 py-2 text-gray-700 hover:text-purple-600 transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Billing
-                  </Link>
+                  </Link> */}
                   <Link
                     href="/settings"
                     className="block px-3 py-2 text-gray-700 hover:text-purple-600 transition-colors"

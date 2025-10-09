@@ -90,8 +90,6 @@ Rules:
     const raw = (resp as any).output_text ?? JSON.stringify(resp.output);
     const parsed = safeParseJson(raw) ?? {};
 
-    console.log('Got HERE');
-
     const cleaned: PropertyInfoDto = {
       property_address: parsed.property_address ?? null,
       purchase_price: coerceNum(parsed.purchase_price),
@@ -113,7 +111,6 @@ Rules:
   // ---------------------------------------------------------------------------
 
   async analysis(body: AnalysisRequestDto): Promise<AnalysisResponseDto> {
-    console.log('AI Service received body:', body);
     if (!body?.investment_strategy) {
       throw new BadRequestException('strategy is required');
     }

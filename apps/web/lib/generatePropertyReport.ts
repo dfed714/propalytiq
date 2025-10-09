@@ -3,33 +3,11 @@
 import { jsPDF } from "jspdf";
 import { saveAs } from "file-saver";
 import html2canvas from "html2canvas";
-
-interface PropertyData {
-  address: string;
-  price: string;
-  bedrooms: string | number;
-  bathrooms: string | number;
-  description: string;
-  propertyType?: string;
-  investmentStrategy?: string;
-}
-
-interface AnalysisData {
-  investmentStrategy?: string;
-  top_stats: Record<string, number>;
-  projection: {
-    x_label: string;
-    y_label: string;
-    points: Array<{ x: number | string; y: number }>;
-  };
-  strengths: string[];
-  weaknesses: string[];
-  recommendations: string[];
-}
+import { Analysis, Property } from "@dtos";
 
 interface PropertyReportInput {
-  propertyData: PropertyData;
-  analysisData: AnalysisData;
+  propertyData: Property;
+  analysisData: Analysis;
 }
 
 export default async function generatePropertyReport(
@@ -129,7 +107,7 @@ export default async function generatePropertyReport(
   y += 10;
   doc.setFontSize(12).setTextColor(textColor);
   const propertyFields = [
-    `Type: ${str(propertyData.propertyType, "Property")}`,
+    `Type: ${str(propertyData.property_type, "Property")}`,
     `Price: ${str(propertyData.price, "£0")}`,
     `Bedrooms: ${num(propertyData.bedrooms, 0)}`,
     `Bathrooms: ${num(propertyData.bathrooms, 0)}`,
@@ -162,7 +140,7 @@ export default async function generatePropertyReport(
   doc.text(
     splitText(
       `Investment Strategy: ${str(
-        analysisData.investmentStrategy,
+        analysisData.investment_strategy,
         "Buy-to-Let"
       )}`,
       maxTextWidth
@@ -172,7 +150,7 @@ export default async function generatePropertyReport(
   );
   y += getTextHeight(
     `Investment Strategy: ${str(
-      analysisData.investmentStrategy,
+      analysisData.investment_strategy,
       "Buy-to-Let"
     )}`,
     12,
@@ -181,7 +159,7 @@ export default async function generatePropertyReport(
   Object.entries(analysisData.top_stats).forEach(([key, value]) => {
     const formattedValue = key.includes("(%)")
       ? `${value}%`
-      : `£${Math.abs(value).toLocaleString()}`;
+      : `£${Math.abs(Number(value)).toLocaleString()}`;
     const text = `${key}: ${formattedValue}`;
     const lines = splitText(text, maxTextWidth);
     lines.forEach((line: string | string[]) => {

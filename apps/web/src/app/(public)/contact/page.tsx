@@ -1,7 +1,7 @@
 import MainLayout from "@components/layout/MainLayout";
 import { getAuth } from "@lib/auth";
 import { getAccount } from "@lib/api/account";
-import HowItWorksClient from "./HowItWorksClient";
+import ContactForm from "./ContactForm";
 
 export default async function HowItWorksPage() {
   const { user } = await getAuth(); // verified user
@@ -12,7 +12,7 @@ export default async function HowItWorksPage() {
       isAuthenticated={!!user}
       firstName={account?.user.first_name ?? undefined}
     >
-      <HowItWorksClient />
+      <ContactForm />
     </MainLayout>
   );
 }

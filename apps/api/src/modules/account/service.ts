@@ -1,73 +1,71 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-// apps/backend/src/modules/account/service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
 import {
   getAccountRow,
+  getMetrics,
   updateEmailPrefs,
   updateProfileRow,
 } from './repository';
-import { UpdateProfileDto } from '@dtos';
+import { DashboardMetrics } from '@dtos';
 
 export type AccountResponse = {
   user: {
-    userId: string;
-    firstName: string | null;
-    lastName: string | null;
-    accountCreatedAt: Date;
+    user_id: string;
+    first_name: string | null;
+    last_name: string | null;
+    email: string | null;
+    account_created_at: Date;
   };
-  // emailPreferences: {
-  //   reports: boolean;
-  //   marketUpdates: boolean;
-  //   productUpdates: boolean;
-  //   securityUpdates: boolean;
-  // };
-  // subscription: {
-  //   stripeSubscriptionId: string | null;
-  //   stripeCustomerId: string | null;
-  //   status: string | null;
-  //   plan: string | null;
-  //   currentPeriodEnd: Date | null;
-  //   createdAt: Date | null;
-  //   reportsAllowed: number | null;
-  //   reportsUsed: number | null;
-  // };
+  email_preferences: {
+    email_reports: boolean;
+    email_market_updates: boolean;
+    email_product_updates: boolean;
+    email_security_updates: boolean;
+  };
+  subscription: {
+    subscription_status: string | null;
+    current_subscription_month: number | null;
+    updated_at: Date | null;
+    current_period_end: Date | null;
+    subscription_created_at: Date | null;
+    reports_allowed_per_month: number | null;
+  };
 };
 
 @Injectable()
 export class AccountService {
-  async getForUser(userId: string): Promise<AccountResponse> {
-    const row = await getAccountRow(userId);
+  async getForUser(user_id: string): Promise<AccountResponse> {
+    const row = await getAccountRow(user_id);
     if (!row) throw new NotFoundException('User not found');
 
     return {
       user: {
-        userId: row.user_id,
-        firstName: row.first_name,
-        lastName: row.last_name,
-        accountCreatedAt: row.account_created_at,
+        user_id: row.user_id,
+        first_name: row.first_name,
+        last_name: row.last_name,
+        email: row.email,
+        account_created_at: row.account_created_at,
       },
-      // emailPreferences: {
-      //   reports: row.email_reports,
-      //   marketUpdates: row.email_market_updates,
-      //   productUpdates: row.email_product_updates,
-      //   securityUpdates: row.email_security_updates,
-      // },
-      // subscription: {
-      //   stripeSubscriptionId: row.stripe_subscription_id,
-      //   stripeCustomerId: row.stripe_customer_id,
-      //   status: row.status,
-      //   plan: row.plan,
-      //   currentPeriodEnd: row.current_period_end,
-      //   createdAt: row.subscription_created_at,
-      //   reportsAllowed: row.reports_allowed,
-      //   reportsUsed: row.reports_used,
-      // },
+      email_preferences: {
+        email_reports: row.email_reports,
+        email_market_updates: row.email_market_updates,
+        email_product_updates: row.email_product_updates,
+        email_security_updates: row.email_security_updates,
+      },
+      subscription: {
+        subscription_status: row.subscription_status,
+        current_subscription_month: row.current_subscription_month,
+        updated_at: row.updated_at,
+        current_period_end: row.current_period_end,
+        subscription_created_at: row.subscription_created_at,
+        reports_allowed_per_month: row.reports_allowed_per_month,
+      },
     };
   }
 
   async updateEmailPreferences(
-    userId: string,
+    user_id: string,
     prefs: {
       email_reports?: boolean;
       email_market_updates?: boolean;
@@ -75,19 +73,38 @@ export class AccountService {
       email_security_updates?: boolean;
     },
   ) {
-    await updateEmailPrefs(userId, prefs);
-    const fresh = await getAccountRow(userId);
+    await updateEmailPrefs(user_id, prefs);
+    const fresh = await getAccountRow(user_id);
     if (!fresh) throw new NotFoundException('User not found');
     return { ok: true };
   }
 
-  async updateProfile(userId: string, dto: UpdateProfileDto) {
-    await updateProfileRow(userId, {
-      firstName: dto.firstName,
-      lastName: dto.lastName,
-    });
-    const fresh = await getAccountRow(userId);
+  async updateProfile(
+    user_id: string,
+    body: {
+      first_name: string;
+      last_name: string;
+    },
+  ) {
+    await updateProfileRow(user_id, body);
+    const fresh = await getAccountRow(user_id);
     if (!fresh) throw new NotFoundException('User not found');
     return { ok: true };
+  }
+
+  async getMetrics(user_id: string): Promise<DashboardMetrics> {
+    const row = await getMetrics(user_id);
+    if (!row) throw new NotFoundException('User not found');
+
+    return {
+      total_reports: row.total_reports,
+      average_roi: row.average_roi,
+      reports_this_month: row.reports_this_month,
+      current_subscription_month: row.current_subscription_month,
+      subscription_status: row.subscription_status,
+      reports_allowed_per_month: row.reports_allowed_per_month,
+      next_billing_date: row.next_billing_date,
+      is_cancelled: row.is_cancelled,
+    };
   }
 }

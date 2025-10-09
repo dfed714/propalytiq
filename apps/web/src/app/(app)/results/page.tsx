@@ -12,7 +12,7 @@ export default async function ResultsPage() {
   return (
     <MainLayout
       isAuthenticated={!!user}
-      firstName={account?.user.firstName ?? undefined}
+      firstName={account?.user.first_name ?? undefined}
     >
       <ResultsClient />
     </MainLayout>

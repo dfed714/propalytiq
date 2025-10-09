@@ -5,25 +5,12 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import InvestmentReport from "@components/results/InvestmentReport";
-import EditableParameters from "@components/results/EditableParameter";
-import { Button } from "@components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@components/ui/dialog";
-import { Banknote } from "lucide-react";
-import Link from "next/link";
-import ProcessingAnimation from "@components/analysis/ProcessingAnimation";
+import LoadingAnimation from "@components/results/LoadingAnimation";
 
 const ResultsClient = () => {
   const router = useRouter();
   const [propertyData, setPropertyData] = useState<any>(null);
   const [analysisData, setAnalysisData] = useState<any>(null);
-  const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
 
   useEffect(() => {
     // Retrieve property data from sessionStorage.analysisData
@@ -56,14 +43,13 @@ const ResultsClient = () => {
         recommendations: parsedAnalysisData.recommendations,
       });
     } else {
-      // router.push("/analysis"); // Redirect if no data is found
+      router.push("/analysis"); // Redirect if no data is found
     }
   }, [router]);
 
   if (!propertyData) {
-    return <ProcessingAnimation />;
+    return <LoadingAnimation />;
   } else {
-    console.log("Property Data:", propertyData);
   }
 
   return (
@@ -75,52 +61,11 @@ const ResultsClient = () => {
         <p className="text-lg sm:text-xl opacity-90">{propertyData.address}</p>
       </div>
 
-      <EditableParameters propertyData={propertyData} />
+      {/* <EditableParameters propertyData={propertyData} /> */}
       <InvestmentReport
         propertyData={propertyData}
         analysisData={analysisData}
       />
-
-      <Dialog open={showUpgradeDialog} onOpenChange={setShowUpgradeDialog}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Upgrade Your Plan</DialogTitle>
-            <DialogDescription>
-              Unlock all premium features and get full access to comprehensive
-              property investment reports.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="rounded-lg bg-gray-50 p-4 border border-gray-200 dark:border-gray-700">
-              <h3 className="font-medium mb-2 flex items-center">
-                <Banknote className="mr-2 h-5 w-5 text-propalytiq-teal" />
-                Pro Plan
-              </h3>
-              <p className="text-sm text-gray-500 mb-2">
-                Get unlimited reports and advanced investment metrics.
-              </p>
-              <div className="text-2xl font-bold mb-1">
-                £29.99
-                <span className="text-sm font-normal text-gray-500">
-                  /month
-                </span>
-              </div>
-              <p className="text-xs text-gray-500">Cancel anytime</p>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setShowUpgradeDialog(false)}
-            >
-              Maybe Later
-            </Button>
-            <Button asChild>
-              <Link href="/pricing">View Plans</Link>
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };
